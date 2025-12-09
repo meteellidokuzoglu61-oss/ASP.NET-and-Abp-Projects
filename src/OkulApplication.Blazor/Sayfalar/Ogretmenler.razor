@@ -1,0 +1,262 @@
+﻿@page "/teachers"
+@using OkulApplication.Localization
+@using OkulApplication.Permissions;
+@using Volo.Abp.Application.Dtos
+@using OkulApplication.Ogretmenler
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Components.Web
+@inject AbpBlazorMessageLocalizerHelper<OkulApplicationResource> LH
+@inherits AbpCrudPageBase<IOgretmenAppService, OgretmenDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateOgretmenDto>
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h2>@L["Öğretmenler"]</h2>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Color.Primary"
+                        Clicked="OpenCreateModalAsync">@L["Yeni Öğretmen"]</Button>
+            </Column>
+        </Row>
+    </CardHeader>
+    <CardBody>
+        <DataGrid TItem="OgretmenDto"
+                  Data="Entities"
+                  ReadData="OnDataGridReadAsync"
+                  CurrentPage="CurrentPage"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="OgretmenDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="OgretmenDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="OgretmenDto"
+                                          Text="@L["Güncelle"]"
+                                          Clicked="() => OpenEditModalAsync(context)" />
+                            <EntityAction TItem="OgretmenDto"
+                                          Text="@L["Sil"]"
+                                          Clicked="() => DeleteEntityAsync(context)"
+                                          ConfirmationMessage="()=>GetDeleteConfirmationMessage(context)" />
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+                <DataGridColumn TItem="OgretmenDto"
+                                Field="@nameof(OgretmenDto.Ogretmen_AdiSoyadi)"
+                                Caption="@L["Adı-Soyadı"]"></DataGridColumn>
+
+                <DataGridColumn TItem="OgretmenDto"
+                                Field="@nameof(OgretmenDto.Ogretmen_BabaAdi)"
+                                Caption="Baba Adı">
+                    <DisplayTemplate Context="context">
+                        @((context.Ogretmen_BabaAdi ?? "Yok"))  <!-- Null kontrol -->
+                    </DisplayTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="OgretmenDto"
+                                Field="@nameof(OgretmenDto.Ogretmen_Bransi)"
+                                Caption="@L["Branşı"]">
+                    <DisplayTemplate>
+                        @L[$"Enum:Branslar.{context.Ogretmen_Bransi:D}"]
+                    </DisplayTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="OgretmenDto"
+                                Field="@nameof(OgretmenDto.Ogretmen_DogumTarihi)"
+                                Caption="@L["Doğum Tarihi"]">
+                    <DisplayTemplate>
+                        @context.Ogretmen_DogumTarihi.ToShortDateString()
+                    </DisplayTemplate>
+                </DataGridColumn>
+                <DataGridColumn TItem="OgretmenDto"
+                                Field="@nameof(OgretmenDto.CreationTime)"
+                                Caption="@L["CreationTime"]">
+                    <DisplayTemplate>
+                        @context.CreationTime.ToLongDateString()
+                    </DisplayTemplate>
+                </DataGridColumn>
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+<Modal @ref="@CreateModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["Yeni Öğretmen"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Adı-Soyadı"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewEntity.Ogretmen_AdiSoyadi">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["Branşı"]</FieldLabel>
+                        <Select TValue="Branslar" @bind-SelectedValue="@NewEntity.Ogretmen_Bransi">
+                            @foreach (int bransTypeValue in Enum.GetValues(typeof(Branslar)))
+                            {
+                                <SelectItem TValue="Branslar" Value="@((Branslar) bransTypeValue)">
+                                    @L[$"Enum:Branslar.{bransTypeValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Sınıfı"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_Sinif">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Şubesi"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_Sube">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Baba Adı"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_BabaAdi">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Doğum Tarihi"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="NewEntity.Ogretmen_DogumTarihi"/>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateModalAsync">@L["İptal"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="CreateEntityAsync">@L["Kayıt"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="@EditModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@EditingEntity.Ogretmen_AdiSoyadi</ModalTitle>
+                <CloseButton Clicked="CloseEditModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Adı-Soyadı"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Ogretmen_AdiSoyadi">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+                    <Field>
+                        <FieldLabel>@L["Baba Adı"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_BabaAdi">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Branşı"]</FieldLabel>
+                        <Select TValue="Branslar" @bind-SelectedValue="@EditingEntity.Ogretmen_Bransi">
+                            @foreach (int bookTypeValue in Enum.GetValues(typeof(Branslar)))
+                            {
+                                <SelectItem TValue="Branslar" Value="@((Branslar) bookTypeValue)">
+                                    @L[$"Enum:Branslar.{bookTypeValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Sınıfı"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_Sinif">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>@L["Şubesi"]</FieldLabel>
+                        <TextEdit @bind-Text="@NewEntity.Ogretmen_Sube">
+                            <Feedback>
+
+                                <ValidationError />
+                            </Feedback>
+
+                        </TextEdit>
+
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Doğum Tarihi"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="EditingEntity.Ogretmen_DogumTarihi"/>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditModalAsync">@L["İptal"]</Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="UpdateEntityAsync">@L["Kayıt"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code
+{
+    public Ogretmenler() // Constructor
+    {
+        LocalizationResource = typeof(OkulApplicationResource);
+    }
+}

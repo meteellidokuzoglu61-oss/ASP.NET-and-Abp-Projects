@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OkulApplication.Application.Contracts/OkulApplication.Application.Contracts.csproj" />
+    <Project Path="src/OkulApplication.Application/OkulApplication.Application.csproj" />
+    <Project Path="src/OkulApplication.Blazor/OkulApplication.Blazor.csproj" />
+    <Project Path="src/OkulApplication.DbMigrator/OkulApplication.DbMigrator.csproj" />
+    <Project Path="src/OkulApplication.Domain.Shared/OkulApplication.Domain.Shared.csproj" />
+    <Project Path="src/OkulApplication.Domain/OkulApplication.Domain.csproj" />
+    <Project Path="src/OkulApplication.EntityFrameworkCore/OkulApplication.EntityFrameworkCore.csproj" />
+    <Project Path="src/OkulApplication.HttpApi.Client/OkulApplication.HttpApi.Client.csproj" />
+    <Project Path="src/OkulApplication.HttpApi/OkulApplication.HttpApi.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/OkulApplication.Application.Tests/OkulApplication.Application.Tests.csproj" />
+    <Project Path="test/OkulApplication.Domain.Tests/OkulApplication.Domain.Tests.csproj" />
+    <Project Path="test/OkulApplication.EntityFrameworkCore.Tests/OkulApplication.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/OkulApplication.HttpApi.Client.ConsoleTestApp/OkulApplication.HttpApi.Client.ConsoleTestApp.csproj" />
+    <Project Path="test/OkulApplication.TestBase/OkulApplication.TestBase.csproj" />
+  </Folder>
+</Solution>
