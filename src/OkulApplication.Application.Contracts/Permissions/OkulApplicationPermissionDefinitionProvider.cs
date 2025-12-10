@@ -37,6 +37,19 @@ public class OkulApplicationPermissionDefinitionProvider : PermissionDefinitionP
         ogrenciler.AddChild(OkulApplicationPermissions.Ogrenciler.Delete, L("Permission:Ogrenciler.Delete"));
     }
 
+
+    var ogretmenler = okulApplicationGroup.AddPermission(
+
+        OkulApplicationPermissions.Ogretmenler.Default,
+        L()
+
+
+
+
+
+        );
+         
+
     private static LocalizableString L(string name)
     {
         return LocalizableString.Create<OkulApplicationResource>(name);

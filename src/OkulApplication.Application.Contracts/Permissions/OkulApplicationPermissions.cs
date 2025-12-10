@@ -18,5 +18,18 @@
             public const string Edit = Default + ".Edit";
             public const string Delete = Default + ".Delete";
         }
+
+
+        public static class Ogretmenler
+        {
+
+            public const string Default = GroupName + ".Ogretmenler";
+            public const string Create = Default + ".Create";
+            public const string Edit = Default + ".Edit";
+            public const string Delete = Default + ".Delete";
+
+
+
+        }
     }
 }
