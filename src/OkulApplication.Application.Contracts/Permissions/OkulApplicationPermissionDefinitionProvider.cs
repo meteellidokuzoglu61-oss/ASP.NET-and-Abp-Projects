@@ -37,17 +37,14 @@ public class OkulApplicationPermissionDefinitionProvider : PermissionDefinitionP
         ogrenciler.AddChild(OkulApplicationPermissions.Ogrenciler.Delete, L("Permission:Ogrenciler.Delete"));
     }
 
-
-    var ogretmenler = okulApplicationGroup.AddPermission(
-
+    var Ogretmenler = okulApplicationGroup.AddPermission(
         OkulApplicationPermissions.Ogretmenler.Default,
-        L()
+        L("Permission:Ogretmenler")
+    );
+    Ogretmenler.AddChild(OkulApplicationPermissions.Ogretmenler.Create, L("Permission:Ogretmenler.Create"));
+    Ogretmenler.AddChild(OkulApplicationPermissions.Ogretmenler.Edit, L("Permission:Ogretmenler.Edit"));
+    Ogretmenler.AddChild(OkulApplicationPermissions.Ogretmenler.Delete, L("Permission:Ogretmenler.Delete"));
 
-
-
-
-
-        );
          
 
     private static LocalizableString L(string name)

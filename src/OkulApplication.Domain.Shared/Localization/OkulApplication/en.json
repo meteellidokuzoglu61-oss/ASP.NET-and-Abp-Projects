@@ -31,6 +31,13 @@
     "Permission:Students": "Student Management",
     "Permission:Students.Create": "Create Student",
     "Permission:Students.Edit": "Edit Student",
-    "Permission:Students.Delete": "Delete Student"
+    "Permission:Students.Delete": "Delete Student",
+    "Permission:Ogretmenler": "Teacher Management",
+    "Permission:Ogretmenler.Create": "Create Teacher",
+    "Permission:Ogretmenler.Edit": "Edit Teacher",
+    "Permission:Ogretmenler.Delete": "Delete Teacher"
+
+
+
   }
 }
