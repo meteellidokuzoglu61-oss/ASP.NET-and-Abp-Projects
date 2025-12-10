@@ -121,5 +121,24 @@ public class OkulApplicationDbContext :
                    .IsRequired();
 
         });
+
+        builder.Entity<Not>(b =>
+        {
+            b.ToTable(OkulApplicationConsts.DbTablePrefix + "Notlar",
+                OkulApplicationConsts.DbSchema);
+
+            b.ConfigureByConvention(); // Id, CreationTime, etc.
+
+            // optional: öğretmene bağlamak istiyorsan uncomment et
+            // b.Property(x => x.OgretmenId).IsRequired();
+
+            // Not kolonları
+            b.Property(x => x.Sozlu).IsRequired();
+            b.Property(x => x.Yazili).IsRequired();
+            b.Property(x => x.Proje).IsRequired();
+        });
+
+
+
     }
 }

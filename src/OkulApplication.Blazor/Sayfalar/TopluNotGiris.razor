@@ -1,0 +1,69 @@
+﻿@page "/toplu-not-giris"
+@inject NotAppService NotAppService
+
+<h3>Toplu Not Girişi</h3>
+
+@if (ogrenciler != null)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Sözlü</th>
+                <th>Yazılı</th>
+                <th>Proje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ogr in ogrenciler)
+            {
+                <tr>
+                    <td>@ogr.Ogrenci_AdiSoyadi</td>
+                    <td><InputNumber @bind-Value="ogr.So = 0"></InputNumber></td>
+                    <td><InputNumber @bind-Value="ogr.Yaz = 0"></InputNumber></td>
+                    <td><InputNumber @bind-Value="ogr.Pro = 0"></InputNumber></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="Kaydet">Kaydet</button>
+}
+
+@code {
+    private List<OgrenciViewModel> ogrenciler;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ogretmenId = Guid.Parse("..."); // oturum öğretmeni
+        var ogrList = await NotAppService.GetOgrencilerForOgretmenAsync(ogretmenId);
+
+        ogrenciler = ogrList.Select(o => new OgrenciViewModel
+        {
+            Id = o.Id,
+            Ogrenci_AdiSoyadi = o.Ogrenci_AdiSoyadi
+        }).ToList();
+    }
+
+    private async Task Kaydet()
+    {
+        var notlar = ogrenciler.Select(o => new Notlar.Not
+        {
+            Ders = "Matematik",
+            Sozlu = o.So,
+            Yazili = o.Yaz,
+            Proje = o.Pro
+        }).ToList();
+
+        await NotAppService.TopluNotGirisAsync(notlar);
+    }
+
+    public class OgrenciViewModel
+    {
+        public Guid Id { get; set; }
+        public string Ogrenci_AdiSoyadi { get; set; }
+        public decimal So { get; set; }
+        public decimal Yaz { get; set; }
+        public decimal Pro { get; set; }
+    }
+}
