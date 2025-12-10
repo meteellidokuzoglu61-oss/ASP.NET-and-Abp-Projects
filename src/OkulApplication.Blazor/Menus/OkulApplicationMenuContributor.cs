@@ -62,7 +62,7 @@ namespace OkulApplication.Blazor.Menus
                         "TeacherApp.Teacher",
                         l["Menu:Teachers"],
                         url: "/teachers"
-                    )
+                    ).RequirePermissions(OkulApplicationPermissions.Ogretmenler.Default)
                 )
             );
 
