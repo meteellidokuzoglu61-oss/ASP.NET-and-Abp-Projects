@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OkulApplication.Notlar;
 using OkulApplication.Ogrenciler;
 using OkulApplication.Ogretmenler;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -29,6 +30,7 @@ public class OkulApplicationDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
   public  DbSet<Ogrenci>Ogrenciler {  get; set; }
   public DbSet<Ogretmen>Ogretmenler { get; set; }
+  public DbSet<Not>Notlar {  get; set; }
 
     #region Entities from the modules
 

@@ -5,7 +5,6 @@ namespace OkulApplication.Notlar
 {
     public class Not : Entity<Guid>
     {
-      
         public string Ders { get; set; } // Branş
         public decimal Sozlu { get; set; } // 0-100
         public decimal Yazili { get; set; } // 0-100
