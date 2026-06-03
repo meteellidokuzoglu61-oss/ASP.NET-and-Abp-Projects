@@ -1,0 +1,100 @@
+﻿@model List<dynamic>
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">📘 Sınıflar</h2>
+
+    <!-- DROPDOWN MENÜ -->
+    <div class="mb-4">
+     <label class="form-label fw-bold">Sınıf Seç:</label>
+     <select class="form-select">
+        <option>9. Sınıflar</option>
+        <option>10. Sınıflar</option>
+        <option>11. Sınıflar</option>
+        <option>12. Sınıflar</option>
+     </select>
+    </div>
+
+<!-- Kart Görünümü -->
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>9/A Sınıfı</h4>
+
+                <a asp-action="DersProgrami" class="btn btn-primary btn-sm mt-2">🗓 Ders Programı</a>
+                <a asp-action="RehberOgretmen" class="btn btn-secondary btn-sm mt-2">👩‍🏫 Rehber Öğretmen</a>
+                <a asp-action="SinifListesiPdf" class="btn btn-danger btn-sm mt-2">📄 PDF İndir</a>
+                <a asp-action="YerlesimPlani" class="btn btn-dark btn-sm mt-2">🧭 Yerleşim Planı</a>
+            </div>
+        </div>
+    </div>
+
+
+  <div class="row">
+     <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>9/B Sınıfı</h4>
+
+                <a asp-action="DersProgrami" class="btn btn-primary btn-sm mt-2">🗓 Ders Programı</a>
+                <a asp-action="RehberOgretmen" class="btn btn-secondary btn-sm mt-2">👩‍🏫 Rehber Öğretmen</a>
+                <a asp-action="SinifListesiPdf" class="btn btn-danger btn-sm mt-2">📄 PDF İndir</a>
+                <a asp-action="YerlesimPlani" class="btn btn-dark btn-sm mt-2">🧭 Yerleşim Planı</a>
+            </div>
+     </div>
+  </div>
+
+  <div class="row">
+     <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>9/C Sınıfı</h4>
+
+                <a asp-action="DersProgrami" class="btn btn-primary btn-sm mt-2">🗓 Ders Programı</a>
+                <a asp-action="RehberOgretmen" class="btn btn-secondary btn-sm mt-2">👩‍🏫 Rehber Öğretmen</a>
+                <a asp-action="SinifListesiPdf" class="btn btn-danger btn-sm mt-2">📄 PDF İndir</a>
+                <a asp-action="YerlesimPlani" class="btn btn-dark btn-sm mt-2">🧭 Yerleşim Planı</a>
+            </div>
+     </div>
+  </div>
+
+  <div class="row">
+     <div class="col-md-4 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4>9/D Sınıfı</h4>
+
+                <a asp-action="DersProgrami" class="btn btn-primary btn-sm mt-2">🗓 Ders Programı</a>
+                <a asp-action="RehberOgretmen" class="btn btn-secondary btn-sm mt-2">👩‍🏫 Rehber Öğretmen</a>
+                <a asp-action="SinifListesiPdf" class="btn btn-danger btn-sm mt-2">📄 PDF İndir</a>
+                <a asp-action="YerlesimPlani" class="btn btn-dark btn-sm mt-2">🧭 Yerleşim Planı</a>
+            </div>
+     </div>
+  </div>
+
+
+
+
+    <!-- Daha fazla sınıf kartı buraya eklenebilir -->
+</div>
+
+
+    <!-- OKUL BLOK HARİTASI -->
+    <div class="mt-5">
+        <h3 class="text-center mb-3">🧭 Okul Blok Yerleşimi</h3>
+
+        <div class="text-center">
+            <img id="mapImage" src="@ViewBag.OkulHaritasi" 
+                 class="img-fluid border rounded shadow"
+                 style="max-width:700px;" />
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showBlock(blok) {
+        alert("Seçilen sınıfın bulunduğu yer: " + blok);
+    }
+</script>

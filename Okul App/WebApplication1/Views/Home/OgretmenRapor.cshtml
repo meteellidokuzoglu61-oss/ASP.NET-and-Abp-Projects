@@ -1,0 +1,113 @@
+﻿@{
+    var rapor = ViewBag.Rapor as List<dynamic>;
+    var ogretmenAdi = ViewBag.OgretmenAdi as string ?? "Seçilen Öğretmen";
+}
+
+<h2>@ogretmenAdi - Ders Bazlı Öğrenci Notları</h2>
+
+<form method="get" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <select name="ogretmenId" class="form-control" onchange="this.form.submit()">
+                <option value="">-- Öğretmen Seç --</option>
+                @foreach (var o in ViewBag.Ogretmenler)
+                {
+                    <option value="@o.Value" @@(o.Value == ViewBag.SecilenOgretmenId?.ToString() ? "selected" : "")>@o.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="donem" class="form-control" placeholder="Dönem (1 veya 2)" value="@ViewBag.SecilenDonem" />
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary">Getir</button>
+        </div>
+    </div>
+</form>
+
+@if (rapor != null && rapor.Any())
+{
+    <!-- Grafik -->
+    <canvas id="ogretmenChart" width="800" height="300"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('ogretmenChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(rapor.Select(r => r.DersAd).Distinct())),
+                datasets: [
+                    {
+                        label: 'Proje',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                            rapor.GroupBy(r => r.DersAd).Select(g => g.Average(x => x.Proje))
+                        )),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    },
+                    {
+                        label: 'Yazılı',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                            rapor.GroupBy(r => r.DersAd).Select(g => g.Average(x => x.YaziliSinav))
+                        )),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Sözlü',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                            rapor.GroupBy(r => r.DersAd).Select(g => g.Average(x => x.Sozlu))
+                        )),
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)'
+                    },
+                    {
+                        label: 'Genel Ortalama',
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                            rapor.GroupBy(r => r.DersAd).Select(g => g.Average(x => x.GenelOrtalama))
+                        )),
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)'
+                    }
+                ]
+            },
+            options: { scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+    </script>
+
+    <!-- Detay Tablosu -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Ders</th>
+                <th>Dönem</th>
+                <th>Proje</th>
+                <th>Yazılı</th>
+                <th>Sözlü</th>
+                <th>Genel Ortalama</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in rapor)
+            {
+                <tr>
+                    <td>@n.OgrenciAd</td>
+                    <td>@n.DersAd</td>
+                    <td>@n.Donem</td>
+                    <td>@n.Proje</td>
+                    <td>@n.YaziliSinav</td>
+                    <td>@n.Sozlu</td>
+                    <td>@n.GenelOrtalama:F2</td>
+                    <td>
+                        @if (n.Durum == "Geçti")
+                        {
+                            <span class="badge bg-success">Geçti</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Kaldı</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

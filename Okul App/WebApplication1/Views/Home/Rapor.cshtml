@@ -1,0 +1,91 @@
+﻿@{
+    var notlar = ViewBag.Notlar as IEnumerable<dynamic>;
+}
+
+<h2>Öğrenci Detay Raporu</h2>
+
+<form method="get" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" name="ogrenciAdi" class="form-control"
+                   placeholder="Öğrenci adını girin"
+                   value="@ViewBag.SecilenOgrenciAdi" />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Getir</button>
+        </div>
+    </div>
+</form>
+
+@if (notlar == null || !notlar.Any())
+{
+    <p>Seçilen öğrenciye ait not bulunamadı.</p>
+}
+else
+{
+    <h4>@ViewBag.SecilenOgrenciAdi</h4>
+
+    <canvas id="ogrenciChart" width="600" height="300"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const notlar = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(notlar));
+
+        const ctx = document.getElementById('ogrenciChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: notlar.map(n => "Dönem " + n.Donem),
+                datasets: [
+                    {
+                        label: 'Proje',
+                        data: notlar.map(n => n.Proje ?? 0),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    },
+                    {
+                        label: 'Yazılı',
+                        data: notlar.map(n => n.YaziliSinav ?? 0),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Sözlü',
+                        data: notlar.map(n => n.Sozlu ?? 0),
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)'
+                    },
+                    {
+                        label: 'Genel Ortalama',
+                        data: notlar.map(n => n.GenelOrtalama),
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)'
+                    }
+                ]
+            },
+            options: { scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+    </script>
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Dönem</th>
+                <th>Proje</th>
+                <th>Yazılı</th>
+                <th>Sözlü</th>
+                <th>Genel Ortalama</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in notlar)
+            {
+                <tr>
+                    <td>@n.Donem</td>
+                    <td>@n.Proje</td>
+                    <td>@n.YaziliSinav</td>
+                    <td>@n.Sozlu</td>
+                    <td>@n.GenelOrtalama</td>
+                    <td>@n.Durum</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

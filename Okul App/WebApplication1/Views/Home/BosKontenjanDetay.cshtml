@@ -1,0 +1,45 @@
+﻿@model OgrenciApp.Models.Bolum
+
+<h2 class="text-center mb-4">@Model.Bolum_Ad - Boş Kontenjanlı Sınıflar ve Bölümler</h2>
+
+<div class="mb-3">
+    <a asp-controller="Home"
+       asp-action="BosKontenjanDetay"
+       asp-route-bolumId="@Model.Id"
+       class="btn btn-outline-primary">
+        Yenile / Tekrar Görüntüle
+    </a>
+</div>
+
+<table class="table table-bordered text-center">
+    <thead class="table-primary">
+        <tr>
+            <th>Sınıf</th>
+            <th>Bölüm Adı</th>
+            <th>Toplam Kontenjan</th>
+            <th>Dolu Kontenjan</th>
+            <th>Boş Kontenjan</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Sinif != null && Model.Sinif.Any())
+        {
+            @foreach (var s in Model.Sinif)
+            {
+                <tr>
+                    <td>@s.Sinif_Ad</td>
+                    <td>@s.Bolum_Ad</td>
+                    <td>@s.ToplamKontenjan</td>
+                    <td>@(s.Ogrenciler?.Count() ?? 0)</td>
+                    <td>@(s.ToplamKontenjan - (s.Ogrenciler?.Count() ?? 0))</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">Boş kontenjanlı sınıf bulunmamaktadır.</td>
+            </tr>
+        }
+    </tbody>
+</table>

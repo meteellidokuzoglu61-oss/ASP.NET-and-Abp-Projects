@@ -1,0 +1,85 @@
+﻿@model OgrenciApp.Models.Ogrenci
+
+<h2>Yeni Öğrenci Ekle</h2>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Ogrenci_AdiSoyadi" class="form-label">Ad Soyad</label>
+        <input asp-for="Ogrenci_AdiSoyadi" class="form-control" maxlength="50" id ="Ad Soyad"/>
+        <small id="Ad Soyad" class="text-muted">0/50</small>
+        <span asp-validation-for="Ogrenci_AdiSoyadi" class="text-danger"></span>
+    </div>
+    <script>
+        const adInput = document.getElementById("AdSoyad");
+        const adSayac = document.getElementById("adSoyadSayac");
+
+        adInput.addEventListener("input", () => {
+            adSayac.textContent = `${adInput.value.length}/50`;
+        });
+    </script>
+    
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Bolumu" class="form-label">Bölüm</label>
+        <input asp-for="Ogrenci_Bolumu" class="form-control" maxlength="50" />
+        <span asp-validation-for="Ogrenci_Bolumu" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Sinifi" class="form-label">Sınıf</label>
+        <input asp-for="Ogrenci_Sinifi" class="form-control" maxlength="50" />
+        <span asp-validation-for="Ogrenci_Sinifi" class="text-danger"></span>
+    </div>
+     
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Subesi" class="form-label">Şubesi</label>
+        <input asp-for="Ogrenci_Subesi" class="form-control" maxlength="50" />
+        <span asp-validation-for="Ogrenci_Subesi" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Cinsiyeti" class="form-label">Cinsiyet</label>
+        <select asp-for="Ogrenci_Cinsiyeti" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select>
+        <span asp-validation-for="Ogrenci_Cinsiyeti" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Telefon" class="form-label">Telefon</label>
+        <input asp-for="Ogrenci_Telefon" class="form-control" placeholder="05XXXXXXXXX" />
+        <span asp-validation-for="Ogrenci_Telefon" class="text-danger"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+        <label asp-for="Ogrenci_Emaili" class="form-label">Email</label>
+        <input asp-for="Ogrenci_Emaili" class="form-control" placeholder="ornek@mail.com" maxlength="100" />
+        <span asp-validation-for="Ogrenci_Emaili" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Foto" class="form-label">Fotoğraf</label>
+        <input type="file" name="Fotoğraf" accept="image/*" />
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

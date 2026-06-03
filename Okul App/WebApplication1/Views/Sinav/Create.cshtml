@@ -1,0 +1,30 @@
+﻿@model Sinav
+
+@{
+    ViewData["Title"] = "Yeni Sınav Ekle";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Yeni Sınav Ekle</h2>
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label class="form-label">Ders</label>
+            <input asp-for="Ders" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Tarih</label>
+            <input asp-for="Tarih" type="date" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Saat</label>
+            <input asp-for="Saat" type="time" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Sınıf</label>
+            <input asp-for="Sinif" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>

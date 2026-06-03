@@ -1,0 +1,189 @@
+@page "/"
+@using Volo.Abp.Application.Dtos
+@using OkulApplication.Duyurular
+@inherits OkulApplicationComponentBase
+@inject DuyuruAppService DuyuruService
+
+<style>
+    /* HERO */
+    .hero-section {
+        background: linear-gradient(135deg, #f8f9fa, #eef1f5);
+        border-radius: 1.5rem;
+        padding: 4rem 2rem;
+    }
+
+    /* CARD HOVER */
+    .card {
+        transition: all .25s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 1rem 2rem rgba(0,0,0,.15);
+        }
+
+    /* FADE IN */
+    .fade-in {
+        animation: fadeInUp .5s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero-section text-center my-5 shadow-sm bg-primary">
+        <h1 class="display-4 fw-bold">
+            Öğrenci Uygulamasına Hoşgeldiniz
+        </h1>
+        <p class="lead text-muted mt-3">
+            ASP.NET Core & ABP Framework ile geliştirilmiş modern öğrenci yönetim sistemi
+        </p>
+    </section>
+
+    <!-- ÖNE ÇIKAN ÖZELLİKLER -->
+    <section class="py-5">
+        <h2 class="text-center mb-5">Öne Çıkan Özellikler</h2>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5>🎓 Öğrenci Yönetimi</h5>
+                        <p class="text-muted">
+                            Öğrenci kayıtlarını kolayca yönetin, güncelleyin ve takip edin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5>📢 Duyurular</h5>
+                        <p class="text-muted">
+                            Okul duyurularını anlık olarak öğrencilere ulaştırın.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5>📊 Raporlama</h5>
+                        <p class="text-muted">
+                            Öğrenci ve öğretmen istatistiklerini hızlıca görüntüleyin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DUYURULAR -->
+    <section class="py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>📢 Güncel Duyurular</h2>
+            <a href="/duyurular" class="btn btn-outline-primary btn-sm">Tümünü Gör</a>
+        </div>
+
+        @if (Duyurular == null)
+        {
+            <!-- Skeleton loading -->
+            <div class="placeholder-glow">
+                <div class="placeholder col-12 mb-2"></div>
+                <div class="placeholder col-10 mb-2"></div>
+                <div class="placeholder col-8"></div>
+            </div>
+        }
+        else if (!Duyurular.Any())
+        {
+            <div class="alert alert-info">
+                Henüz duyuru bulunmamaktadır.
+            </div>
+        }
+        else
+        {
+            <div class="list-group shadow-sm">
+                @foreach (var duyuru in Duyurular)
+                {
+                    <div class="list-group-item fade-in d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@duyuru.Baslik</strong>
+
+                            @if ((DateTime.Now - duyuru.YayimTarihi).TotalDays <= 3)
+                            {
+                                <span class="badge bg-success ms-2">Yeni</span>
+                            }
+                        </div>
+                        <small class="text-muted">
+                            @duyuru.YayimTarihi.ToString("dd.MM.yyyy")
+                        </small>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <!-- İSTATİSTİKLER -->
+    <section class="py-5">
+        <h2 class="text-center mb-4">📊 Genel İstatistikler</h2>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-lg p-4 border-0">
+                    <h6 class="text-primary">Toplam Öğrenci</h6>
+                    <p class="display-6 fw-bold">810</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-lg p-4 border-0">
+                    <h6 class="text-primary">Öğretmen Sayısı</h6>
+                    <p class="display-6 fw-bold">87</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-lg p-4 border-0">
+                    <h6 class="text-primary">Derslik Sayısı</h6>
+                    <p class="display-6 fw-bold">60</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="text-center text-muted py-4">
+    © @DateTime.Now.Year • Öğrenci Yönetim Sistemi
+</footer>
+
+@code {
+    private List<DuyuruDto> Duyurular;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await DuyuruService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 5,
+                Sorting = "YayimTarihi desc"
+            });
+
+        Duyurular = result.Items.ToList();
+    }
+}

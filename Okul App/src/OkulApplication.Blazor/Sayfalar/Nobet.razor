@@ -1,0 +1,260 @@
+﻿@page "/nobet"
+@inject IJSRuntime JS
+@using System.Text.Json
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">🕒 Nöbet & Görev Takibi</h2>
+
+    <!-- NÖBET EKLE -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">➕ Nöbet Ekle</h5>
+
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label>Gün</label>
+                    <select class="form-select" @bind="Yeni.Gun">
+                        @foreach (var g in Gunler)
+                        {
+                            <option>@g</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <label>Öğretmen</label>
+                    <select class="form-select" @bind="Yeni.OgretmenId">
+                        <option value="0">Öğretmen Seç</option>
+                        @foreach (var o in Ogretmenler)
+                        {
+                            <option value="@o.Id">@o.AdSoyad</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <label>Alan</label>
+                    <input class="form-control" @bind="Yeni.Alan" />
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <label>Kat</label>
+                    <select class="form-select" @bind="Yeni.Kat">
+                        <option>Zemin Kat</option>
+                        <option>1. Kat</option>
+                        <option>2. Kat</option>
+                        <option>3. Kat</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-3" @onclick="Ekle">
+                Kaydet
+            </button>
+        </div>
+    </div>
+
+    <!-- NÖBET LİSTESİ -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>📋 Nöbet Listesi</h5>
+
+            @if (!Nobetler.Any())
+            {
+                <div class="alert alert-info">Henüz nöbet eklenmedi.</div>
+            }
+            else
+            {
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Gün</th>
+                            <th>Öğretmen</th>
+                            <th>Alan</th>
+                            <th>Kat</th>
+                            <th>Onay</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var n in Nobetler)
+                        {
+                            <tr>
+                                <td>@n.Id</td>
+                                <td>@n.Gun</td>
+                                <td>@OgretmenAdi(n.OgretmenId)</td>
+                                <td>@n.Alan</td>
+                                <td>@n.Kat</td>
+                                <td>
+                                    @if (n.MudurOnayi)
+                                    {
+                                        <span class="badge bg-success">Onaylandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Bekliyor</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm me-1"
+                                            @onclick="() => MudurOnayla(n)"
+                                            disabled="@n.MudurOnayi">
+                                        🏫
+                                    </button>
+
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="() => Sil(n)">
+                                        🗑
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- HAFTALIK ÇİZELGE -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5>📅 Haftalık Nöbet Çizelgesi (Onaylı)</h5>
+
+            <table class="table table-bordered text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Gün</th>
+                        <th>Öğretmen</th>
+                        <th>Alan</th>
+                        <th>Kat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var gun in Gunler)
+                    {
+                        var liste = Nobetler
+                        .Where(x => x.Gun == gun && x.MudurOnayi)
+                        .ToList();
+
+                        if (!liste.Any())
+                        {
+                            <tr>
+                                <td>@gun</td>
+                                <td colspan="3">—</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var n in liste)
+                            {
+                                <tr>
+                                    <td>@gun</td>
+                                    <td>@OgretmenAdi(n.OgretmenId)</td>
+                                    <td>@n.Alan</td>
+                                    <td>@n.Kat</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <button class="btn btn-danger" onclick="window.print()">
+                📄 PDF Al
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    class OgretmenVM
+    {
+        public int Id { get; set; }
+        public string AdSoyad { get; set; }
+    }
+
+    class NobetVM
+    {
+        public int Id { get; set; }
+        public string Gun { get; set; }
+        public int OgretmenId { get; set; }
+        public string Alan { get; set; }
+        public string Kat { get; set; }
+        public bool MudurOnayi { get; set; }
+    }
+
+    List<OgretmenVM> Ogretmenler = new()
+    {
+        new() { Id = 1, AdSoyad = "Ali Yılmaz" },
+        new() { Id = 2, AdSoyad = "Ayşe Demir" },
+        new() { Id = 3, AdSoyad = "Mehmet Kaya" },
+        new() { Id = 4, AdSoyad = "Fatma Şahin" }
+    };
+
+    List<NobetVM> Nobetler = new();
+
+    NobetVM Yeni = new()
+    {
+        Gun = "Pazartesi",
+        Kat = "Zemin Kat"
+    };
+
+    string[] Gunler = { "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma" };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var json = await JS.InvokeAsync<string>(
+                "localStorage.getItem", "nobetData");
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                Nobetler = JsonSerializer.Deserialize<List<NobetVM>>(json) ?? new();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    string OgretmenAdi(int id) =>
+        Ogretmenler.FirstOrDefault(x => x.Id == id)?.AdSoyad ?? "-";
+
+    async Task Kaydet()
+    {
+        var json = JsonSerializer.Serialize(Nobetler);
+        await JS.InvokeVoidAsync("localStorage.setItem", "nobetData", json);
+    }
+
+    async Task Ekle()
+    {
+        if (Yeni.OgretmenId == 0)
+            return;
+
+        Yeni.Id = Nobetler.Count + 1;
+        Nobetler.Add(Yeni);
+
+        Yeni = new()
+        {
+            Gun = "Pazartesi",
+            Kat = "Zemin Kat"
+        };
+
+        await Kaydet();
+    }
+
+    async Task MudurOnayla(NobetVM n)
+    {
+        n.MudurOnayi = true;
+        await Kaydet();
+    }
+
+    async Task Sil(NobetVM n)
+    {
+        Nobetler.Remove(n);
+        await Kaydet();
+    }
+}

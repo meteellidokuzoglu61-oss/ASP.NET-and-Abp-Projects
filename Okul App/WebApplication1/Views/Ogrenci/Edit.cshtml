@@ -1,0 +1,71 @@
+﻿@model OgrenciApp.Models.Ogrenci
+
+@{
+    ViewData["Title"] = "Öğrenci Düzenle";
+}
+
+<h2>Öğrenci Düzenle</h2>
+<hr />
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Ogrenci_ID" />
+
+    <div class="form-group">
+        <label>Ad</label>
+        <input asp-for="Ogrenci_AdiSoyadi" class="form-control" />
+        <span asp-validation-for="Ogrenci_AdiSoyadi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Sınıf</label>
+        <input asp-for="Ogrenci_Sinifi" class="form-control" />
+        <span asp-validation-for="Ogrenci_Sinifi" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label>Şubesi</label>
+        <input asp-for="Ogrenci_Subesi" class="form-control" />
+        <span asp-validation-for="Ogrenci_Subesi" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Bölüm</label>
+        <input asp-for="Ogrenci_Bolumu" class="form-control" />
+        <span asp-validation-for="Ogrenci_Bolumu" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Telefon</label>
+        <input asp-for="Ogrenci_Telefon" class="form-control" />
+        <span asp-validation-for="Ogrenci_Telefon" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input asp-for="Ogrenci_Emaili" class="form-control" />
+        <span asp-validation-for="Ogrenci_Emaili" class="text-danger"></span>
+    </div>
+       
+
+    <br />
+
+    <button type="submit" class="btn btn-success">Güncelle</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+
+</form>
+
+<form method="post" enctype="multipart/form-data">
+
+    @* Mevcut fotoğraf *@
+    @if (!string.IsNullOrEmpty(Model.Ogrenci_Fotografi))
+    {
+        <img src="@Model.Ogrenci_Fotografi" style="width:150px;margin-bottom:10px;border-radius:8px;" />
+    }
+
+    <div class="mb-3">
+        <label class="form-label">Yeni Fotoğraf (Değiştirmek istersen seç)</label>
+        <input type="file" class="form-control" name="NewPhoto" />
+    </div>
+
+    <button class="btn btn-primary">Kaydet</button>
+</form>

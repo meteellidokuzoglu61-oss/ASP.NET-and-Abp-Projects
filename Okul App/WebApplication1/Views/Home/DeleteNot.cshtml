@@ -1,0 +1,22 @@
+﻿@model OgrenciApp.Models.Not
+
+<h2>Not Sil</h2>
+
+<p>Bu notu silmek istediğinize emin misiniz?</p>
+
+<form asp-action="DeleteNotConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-2">
+        <label>Ders Id: </label> @Model.DersId
+    </div>
+    <div class="mb-2">
+        <label>Öğrenci Id: </label> @Model.OgrenciId
+    </div>
+    <div class="mb-2">
+        <label>Not: </label> @Model.Donem
+    </div>
+
+    <button type="submit" class="btn btn-danger">Sil</button>
+    <a asp-action="NotIndex" class="btn btn-secondary">İptal</a>
+</form>

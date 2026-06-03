@@ -1,0 +1,134 @@
+﻿@page "/duyurular"
+
+@using OkulApplication.Duyurular
+@using Volo.Abp.Application.Dtos
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IDuyuruAppService DuyuruAppService
+
+<h3>Duyurular</h3>
+
+<button class="btn btn-primary mb-3" @onclick="ModalAc">
+    ➕ Yeni Duyuru
+</button>
+
+@if (Duyurular == null)
+{
+    <p>Yükleniyor...</p>
+}
+else if (!Duyurular.Any())
+{
+    <p>Henüz duyuru yok.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Başlık</th>
+                <th>Yayın Tarihi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Duyurular)
+            {
+                <tr>
+                    <td>@d.Baslik</td>
+                    <td>@d.YayimTarihi.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<Modal @bind-Visible="ModalGoster">
+    <ModalHeader>
+        <h5>📢 Yeni Duyuru</h5>
+    </ModalHeader>
+
+    <ModalBody>
+        <EditForm Model="@YeniDuyuru" OnValidSubmit="Kaydet">
+            <DataAnnotationsValidator />
+
+            <div class="mb-2">
+                <label>Başlık</label>
+                <input class="form-control"
+                       @bind="YeniDuyuru.Baslik" />
+            </div>
+
+            <div class="mb-2">
+                <label>İçerik</label>
+                <textarea class="form-control"
+                          rows="4"
+                          @bind="YeniDuyuru.Icerik"></textarea>
+            </div>
+
+            <div class="mb-2">
+                <label>Yayın Tarihi</label>
+                <input type="date"
+                       class="form-control"
+                       @bind="YeniDuyuru.YayimTarihi" />
+            </div>
+
+            <div class="text-end mt-3">
+                <button type="button"
+                        class="btn btn-secondary me-2"
+                        @onclick="ModalKapat">
+                    İptal
+                </button>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Kaydet
+                </button>
+            </div>
+        </EditForm>
+    </ModalBody>
+</Modal>
+
+@code {
+
+    private List<DuyuruDto> Duyurular = new();
+    private bool ModalGoster;
+
+    private CreateUpdateDuyuruDto YeniDuyuru = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ListeYukle();
+    }
+
+    private async Task ListeYukle()
+    {
+        var result = await DuyuruAppService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 50
+            });
+
+        Duyurular = result.Items.ToList();
+    }
+
+    private void ModalAc()
+    {
+        // 🔴 ÖNEMLİ: shadow variable yok
+        YeniDuyuru = new CreateUpdateDuyuruDto
+        {
+            YayimTarihi = DateTime.Today
+        };
+
+        ModalGoster = true;
+    }
+
+    private void ModalKapat()
+    {
+        ModalGoster = false;
+    }
+
+    private async Task Kaydet()
+    {
+        await DuyuruAppService.CreateAsync(YeniDuyuru);
+        ModalGoster = false;
+        await ListeYukle();
+    }
+}

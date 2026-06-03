@@ -1,0 +1,86 @@
+﻿@using OgrenciApp.Models
+@{
+    ViewData["Title"] = "Toplu Not Girişi";
+    var ogrenciler = ViewBag.Ogrenciler as List<Ogrenci>;
+}
+
+<h2>Toplu Not Girişi</h2>
+
+<form asp-action="TopluNotGiris" method="post">
+    <div class="form-group mb-3">
+        <label>Dönem</label>
+        <input type="number" name="donem" class="form-control" required />
+    </div>
+
+    <table class="table table-bordered" id="notTablosu">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Ders</th>
+                <th>Proje</th>
+                <th>Yazılı</th>
+                <th>Sözlü</th>
+                <th>Sil</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <select name="notlar[0].OgrenciId" class="form-control">
+                        @foreach (var o in ogrenciler)
+                        {
+                            <option value="@o.Ogrenci_ID">@o.Ogrenci_AdiSoyadi (@o.Numarasi)</option>
+                        }
+                    </select>
+                </td>
+
+                <td>
+                    <input type="text" name="notlar[0].DersAd" class="form-control" placeholder="Ders adı giriniz" />
+                </td>
+
+                <td><input type="number" name="notlar[0].Proje" class="form-control" min="0" max="100" /></td>
+                <td><input type="number" name="notlar[0].YaziliSinav" class="form-control" min="0" max="100" /></td>
+                <td><input type="number" name="notlar[0].Sozlu" class="form-control" min="0" max="100" /></td>
+
+                <td><button type="button" class="btn btn-danger" onclick="satirSil(this)">X</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary mt-2" onclick="satirEkle()">+ Satır Ekle</button>
+    <button type="submit" class="btn btn-success mt-2">Kaydet</button>
+</form>
+
+<script>
+    let index = 1;
+
+    function satirEkle() {
+        const ogrencilerOptions = `@foreach (var o in ogrenciler) {
+        <option value='@o.Ogrenci_ID'>@o.Ogrenci_AdiSoyadi (@o.Numarasi)</option>
+                }
+`;
+
+        const yeniSatir = `
+        <tr>
+            <td>
+                <select name="notlar[${index}].OgrenciId" class="form-control">
+                    ${ogrencilerOptions}
+                </select>
+            </td>
+            <td>
+                <input type="text" name="notlar[${index}].DersAd" class="form-control" placeholder="Ders adı giriniz" />
+            </td>
+            <td><input type="number" name="notlar[${index}].Proje" class="form-control" /></td>
+            <td><input type="number" name="notlar[${index}].YaziliSinav" class="form-control" /></td>
+            <td><input type="number" name="notlar[${index}].Sozlu" class="form-control" /></td>
+            <td><button type="button" class="btn btn-danger" onclick="satirSil(this)">X</button></td>
+        </tr>`;
+
+        document.querySelector("#notTablosu tbody").insertAdjacentHTML("beforeend", yeniSatir);
+        index++;
+    }
+
+    function satirSil(btn) {
+        btn.closest("tr").remove();
+    }
+</script>

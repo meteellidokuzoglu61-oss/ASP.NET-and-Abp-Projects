@@ -1,0 +1,91 @@
+﻿@model OgrenciApp.Models.Ogretmen
+
+<h2>Öğretmen Ekle</h2>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+<form asp-action="OgretmenCreate" asp-controller="Ogrenci" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Ogretmen_AdiSoyadi" class="form-label">Ad Soyad</label>
+        <input asp-for="Ogretmen_AdiSoyadi" class="form-control" maxlength="50" id="Ad Soyad" />
+        <small id="Ad Soyad" class="text-muted">0/50</small>
+        <span asp-validation-for="Ogretmen_AdiSoyadi" class="text-danger"></span>
+    </div>
+    <script>
+        const adInput = document.getElementById("AdSoyad");
+        const adSayac = document.getElementById("adSoyadSayac");
+
+        adInput.addEventListener("input", () => {
+            adSayac.textContent = `${adInput.value.length}/50`;
+        });
+    </script>
+
+    <div class="mb-3">
+        <label asp-for="Ogretmen_Bransi" class="form-label">Öğretmen Branşı</label>
+         <select asp-for="Ogretmen_Bransi" class="form-select">
+            <option value="">Seçiniz...</option>
+            <option value="Tde">Türk Dili ve Edebiyatı</option>
+            <option value="Mat">Matematik</option>
+            <option value="Tar">Tarih</option>
+            <option value="Fiz">Fizik</option>
+            <option value="Kim">Kimya</option>
+            <option value="Biy">Biyoloji</option>
+            <option value="Bes">Beden Eğitimi Ve Spor</option>
+            <option value="Gör">Görsel Sanatlar ve Müzik</option>
+            <option value="Dkab">Din Kültürü ve Ahlak Bilgisi</option>
+            <option value="Coğ">Coğrafya</option>
+            <option value="Fel">Felsefe</option>
+            <option value="BT">Bilişim Teknolojileri</option>
+            <option value="EET">Elektrik Elektronik Teknolojisi</option>
+            <option value="EOT">Endüstriyel Otomasyon Teknolojisi</option>
+            <option value="MET">Metal Teknolojisi</option>
+            <option value="SBR">Siber Güvenlik</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ogretmen_Subesi" class="form-label">Sınıf-Şubesi</label>
+        <input asp-for="Ogretmen_Subesi" class="form-control" type="datetime" />
+        <span asp-validation-for="Ogretmen_Subesi" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ogretmen_DogumTarihi" class="form-label">Doğum Tarihi</label>
+        <input asp-for="Ogretmen_DogumTarihi" class="form-control" type="datetime"/>
+        <span asp-validation-for="Ogretmen_DogumTarihi" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Ogretmen_Telefon" class="form-label">Telefon</label>
+        <input asp-for="Ogretmen_Telefon" class="form-control" placeholder="05XXXXXXXXX" />
+        <span asp-validation-for="Ogretmen_Telefon" class="text-danger"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+        <label asp-for="Ogretmen_Emaili" class="form-label">Email</label>
+        <input asp-for="Ogretmen_Emaili" class="form-control" placeholder="ornek@mail.com" maxlength="100" />
+        <span asp-validation-for="Ogretmen_Emaili" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="Foto" class="form-label">Fotoğraf</label>
+        <input type="file" name="Fotoğraf" accept="image/*" />
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <partial name="_ValidationScriptsPartial" />
+
+    }
+}

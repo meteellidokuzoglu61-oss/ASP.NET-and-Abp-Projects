@@ -1,0 +1,104 @@
+﻿@model SettingViewModel
+@{
+    ViewData["Title"] = "Ayarlar";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Ayarlar</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Message"]</div>
+    }
+
+    <ul class="nav nav-tabs mb-4" id="settingsTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button">Profil</button>
+        </li>
+        @if (Model.IsAdmin)
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button">Sistem Ayarları</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#permissions" type="button">İzinler</button>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content">
+        <!-- Profil -->
+        <div class="tab-pane fade show active" id="profile">
+            <div class="card shadow-sm p-4 mb-4">
+                <form asp-action="UpdateProfile" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Kullanıcı Adı</label>
+                        <input asp-for="UserName" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Güncelle</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sistem Ayarları -->
+        @if (Model.IsAdmin)
+        {
+            <div class="tab-pane fade" id="system">
+                <div class="card shadow-sm p-4 mb-4">
+                    <form asp-action="UpdateSystem" method="post">
+                        <div class="mb-3 form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="AutoStudentNumber" />
+                            <label class="form-check-label">Otomatik Öğrenci Numarası Verilsin mi?</label>
+                        </div>
+                        <div class="mb-3">
+                            <label>Maksimum Yükleme Boyutu (MB)</label>
+                            <input asp-for="MaxUploadSizeMB" class="form-control" type="number" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Ana Sayfada Gösterilecek Duyuru Sayısı</label>
+                            <input asp-for="HomeAnnouncementCount" class="form-control" type="number" />
+                        </div>
+                        <button type="submit" class="btn btn-danger">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- İzinler -->
+            <div class="tab-pane fade" id="permissions">
+                <div class="card shadow-sm p-4">
+                    <form asp-action="UpdatePermissions" method="post">
+                        <h5 class="text-primary mb-3">Öğretmen İzinleri</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" asp-for="CanTeacherAddStudent" />
+                            <label class="form-check-label">Öğrenci Ekleme</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" asp-for="CanTeacherEditStudent" />
+                            <label class="form-check-label">Öğrenci Düzenleme</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" asp-for="CanTeacherDeleteStudent" />
+                            <label class="form-check-label">Öğrenci Silme</label>
+                        </div>
+
+                        <h5 class="text-primary mb-3">Öğrenci İzinleri</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" asp-for="CanStudentViewProfile" />
+                            <label class="form-check-label">Profil Görüntüleme</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" asp-for="CanStudentEditProfile" />
+                            <label class="form-check-label">Profil Düzenleme</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">İzinleri Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+}

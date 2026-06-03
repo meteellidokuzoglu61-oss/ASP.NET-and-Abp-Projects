@@ -1,0 +1,334 @@
+﻿@page "/disiplin"
+@inject IJSRuntime JS
+@using System.Text.Json
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">⚠️ Disiplin İşlemleri</h2>
+
+    <!-- YENİ KAYIT -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">Yeni Disiplin Kaydı</h5>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Öğrenci Adı Soyadı</label>
+                    <input class="form-control" @bind="YeniKayit.OgrenciAdi" />
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Sınıf</label>
+                    <select class="form-select" @bind="YeniKayit.Sinif">
+                        <option value="">Seç</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label class="form-label">Şube</label>
+                    <select class="form-select" @bind="YeniKayit.Sube">
+                        <option value="">Seç</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                        <option>E</option>
+                        <option>F</option>
+                        <option>G</option>
+                        <option>H</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Disiplin Türü</label>
+                    <select class="form-select" @bind="YeniKayit.Tur">
+                        <option value="">Seçiniz</option>
+                        <option>Uyarı</option>
+                        <option>Kınama</option>
+                        <option>Kısa Süreli Uzaklaştırma</option>
+                        <option>Tasdikname ile Ayrılma</option>
+                        <option>Örgün Eğitimin Dışına Çıkarma</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Olay Açıklaması</label>
+                <textarea class="form-control" rows="3"
+                          @bind="YeniKayit.Aciklama"></textarea>
+            </div>
+
+            <button class="btn btn-primary" @onclick="KayitEkle">
+                Kaydet
+            </button>
+        </div>
+    </div>
+
+    <!-- KAYIT LİSTESİ -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="mb-3">📂 Disiplin Kayıtları</h5>
+
+            @if (!Kayitlar.Any())
+            {
+                <div class="alert alert-info">
+                    Kayıt bulunmamaktadır.
+                </div>
+            }
+            else
+            {
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Öğrenci</th>
+                            <th>Sınıf/Şube</th>
+                            <th>Tür</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var k in Kayitlar)
+                        {
+                            <tr>
+                                <td>@k.Id</td>
+                                <td>@k.OgrenciAdi</td>
+                                <td>@k.Sinif/@k.Sube</td>
+                                <td>@k.Tur</td>
+                                <td>
+                                    <span class="badge @(k.Durum == "Aktif" ? "bg-warning" : "bg-success")">
+                                        @k.Durum
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- MEVCUT İŞLEMLER KORUNDU -->
+                                    <button class="btn btn-outline-primary btn-sm me-1"
+                                            @onclick="@(() => PdfHazirla(k))">
+                                        📄
+                                    </button>
+
+                                    <button class="btn btn-success btn-sm me-1"
+                                            @onclick="@(() => DurumKapat(k))">
+                                        ✔
+                                    </button>
+
+                                    <button class="btn btn-outline-secondary btn-sm me-1"
+                                            @onclick="@(() => KayitSil(k))">
+                                        🗑
+                                    </button>
+
+                                    <!-- EKLENENLER -->
+                                    <button class="btn btn-warning btn-sm me-1"
+                                            @onclick="@(() => KurulAc(k))">
+                                        🏛️
+                                    </button>
+
+                                    <button class="btn btn-info btn-sm"
+                                            @onclick="@(() => SicileIsle(k))">
+                                        📁
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+    <!-- PDF TUTANAK -->
+    @if (SeciliKayit != null)
+    {
+        <div class="mt-5 border p-4">
+            <h4 class="text-center mb-4">DİSİPLİN TUTANAĞI</h4>
+            <p><b>Öğrenci:</b> @SeciliKayit.OgrenciAdi</p>
+            <p><b>Sınıf / Şube:</b> @SeciliKayit.Sinif / @SeciliKayit.Sube</p>
+            <p><b>Tür:</b> @SeciliKayit.Tur</p>
+            <p><b>Açıklama:</b> @SeciliKayit.Aciklama</p>
+
+            <button class="btn btn-danger" onclick="window.print()">
+                PDF Yazdır
+            </button>
+        </div>
+    }
+
+    <!-- DİSİPLİN KURULU -->
+    @if (KurulKaydi != null)
+    {
+        <div class="mt-5 border p-4">
+            <h4 class="text-center mb-3">DİSİPLİN KURULU TUTANAĞI</h4>
+
+            <p><b>Öğrenci:</b> @KurulKaydi.OgrenciAdi</p>
+
+            <input class="form-control mb-2"
+                   placeholder="Kurul Başkanı"
+                   @bind="KurulBaskani" />
+
+            <input class="form-control mb-2"
+                   placeholder="Kurul Üyeleri"
+                   @bind="KurulUyeleri" />
+
+            <textarea class="form-control mb-3"
+                      placeholder="Kurul Kararı"
+                      @bind="KurulKarari"></textarea>
+
+            <button class="btn btn-danger" onclick="window.print()">
+                Kurul Tutanağı PDF
+            </button>
+        </div>
+    }
+
+    <!-- e-OKUL SİCİL -->
+    @if (Sicil.Any())
+    {
+        <div class="mt-5">
+            <h4>📘 Öğrenci Disiplin Sicili</h4>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Öğrenci</th>
+                        <th>Sınıf</th>
+                        <th>Disiplin</th>
+                        <th>Açıklama</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Sicil)
+                    {
+                        <tr>
+                            <td>@s.Id</td>
+                            <td>@s.OgrenciAdi</td>
+                            <td>@s.Sinif/@s.Sube</td>
+                            <td>@s.Tur</td>
+                            <td>@s.Aciklama</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <button class="btn btn-danger" onclick="window.print()">
+                Sicil PDF
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+
+    class DisiplinViewModel
+{
+    public int Id { get; set; }
+    public string OgrenciAdi { get; set; }
+    public string Sinif { get; set; }
+    public string Sube { get; set; }
+    public string Tur { get; set; }
+    public string Aciklama { get; set; }
+    public string Durum { get; set; } = "Aktif";
+}
+
+DisiplinViewModel YeniKayit = new();
+List<DisiplinViewModel> Kayitlar = new();
+List<DisiplinViewModel> Sicil = new();
+
+DisiplinViewModel? SeciliKayit;
+DisiplinViewModel? KurulKaydi;
+
+string KurulBaskani;
+string KurulUyeleri;
+string KurulKarari;
+
+int Sayac = 1;
+
+// 🔹 SAYFA AÇILINCA YÜKLE
+protected override async Task OnInitializedAsync()
+{
+    var json = await JS.InvokeAsync<string>(
+        "localStorage.getItem", "disiplinData");
+
+    if (!string.IsNullOrEmpty(json))
+    {
+        var data = JsonSerializer.Deserialize<DataModel>(json);
+
+        Kayitlar = data?.Kayitlar ?? new();
+        Sicil = data?.Sicil ?? new();
+        Sayac = Kayitlar.Any() ? Kayitlar.Max(x => x.Id) + 1 : 1;
+    }
+}
+
+// 🔹 ORTAK KAYIT MODELİ
+class DataModel
+{
+    public List<DisiplinViewModel> Kayitlar { get; set; } = new();
+    public List<DisiplinViewModel> Sicil { get; set; } = new();
+}
+
+async Task Kaydet()
+{
+    var data = new DataModel
+    {
+        Kayitlar = Kayitlar,
+        Sicil = Sicil
+    };
+
+    var json = JsonSerializer.Serialize(data);
+    await JS.InvokeVoidAsync(
+        "localStorage.setItem", "disiplinData", json);
+}
+
+// 🔹 KAYIT EKLE
+async Task KayitEkle()
+{
+    var yeni = new DisiplinViewModel
+    {
+        Id = Sayac++,
+        OgrenciAdi = YeniKayit.OgrenciAdi,
+        Sinif = YeniKayit.Sinif,
+        Sube = YeniKayit.Sube,
+        Tur = YeniKayit.Tur,
+        Aciklama = YeniKayit.Aciklama,
+        Durum = "Aktif"
+    };
+
+    Kayitlar.Insert(0, yeni);
+    Sicil.Add(yeni); // e-Okul mantığı
+
+    YeniKayit = new();
+    await Kaydet();
+}
+
+// 🔹 PDF / KURUL
+void PdfHazirla(DisiplinViewModel k) => SeciliKayit = k;
+void KurulAc(DisiplinViewModel k) => KurulKaydi = k;
+
+// 🔹 DURUM KAPAT
+async Task DurumKapat(DisiplinViewModel k)
+{
+    k.Durum = "Kapandı";
+    await Kaydet();
+}
+
+// 🔹 SİL
+async Task KayitSil(DisiplinViewModel k)
+{
+    Kayitlar.Remove(k);
+    Sicil.Remove(k);
+    await Kaydet();
+}
+
+// 🔹 MANUEL SİCİLE İŞLE
+async Task SicileIsle(DisiplinViewModel k)
+{
+    if (!Sicil.Any(x => x.Id == k.Id))
+    {
+        Sicil.Add(k);
+        await Kaydet();
+    }
+}
+}

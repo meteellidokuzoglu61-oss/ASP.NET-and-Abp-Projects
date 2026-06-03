@@ -1,0 +1,19 @@
+﻿@{
+    var department = ViewBag.Department;
+}
+
+<h2>@department.Name</h2>
+<p>@department.Description</p>
+<p>@department.Detail</p>
+
+<h4>Bu Bölümün Dalları</h4>
+<ul>
+    @foreach (var branch in department.Branches)
+    {
+        <li>
+            <strong>@branch.Name</strong> - @branch.Description
+        </li>
+    }
+</ul>
+
+<a href="@Url.Action("Index", "Alan")" class="btn btn-secondary mt-3">← Tüm Alanlara Dön</a>

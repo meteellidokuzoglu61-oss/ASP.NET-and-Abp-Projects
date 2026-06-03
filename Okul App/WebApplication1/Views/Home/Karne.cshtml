@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Öğrenci Karnesi";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>Öğrencinin karnesini PDF olarak indirmek için aşağıdaki butona tıklayın:</p>
+
+<a asp-controller="Home" asp-action="OgrenciKarnePdf" class="btn btn-primary">
+    Karne PDF İndir
+</a>
+
+<hr />
+
+<!-- İsteğe bağlı: Ders tablosunu sayfada göstermek -->
+<table class="table table-bordered table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Ders</th>
+            <th>Not</th>
+            <th>Davranış</th>
+        </tr>
+    </thead>
+    <tbody>
+        @* Örnek veri, controller’dan model olarak gönderebilirsin *@
+        <tr>
+            <td>Matematik</td>
+            <td>85</td>
+            <td>İyi</td>
+        </tr>
+        <tr>
+            <td>Fizik</td>
+            <td>90</td>
+            <td>Çok İyi</td>
+        </tr>
+        <tr>
+            <td>Türkçe</td>
+            <td>95</td>
+            <td>İyi</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<OgrenciApp.Models.Devamsizlik>
+
+<h2>Devamsızlık Listesi</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Öğrenci</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Açıklama</th>
+            <th>İşlem</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int i = 1;
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@item.Ogrenci_AdSoyad</td>
+                    <td>@item.Tarih.ToString("yyyy-MM-dd")</td>
+                    <td>@item.Durum</td>
+                    <td>@item.Aciklama</td>
+
+                    <td>
+                        <!-- ✔️ Düzenle -->
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-warning btn-sm">
+                            Düzenle
+                        </a>
+
+
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm">
+                            Sil
+                        </a>
+                    </td>
+                </tr>
+
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Kayıt bulunamadı.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Yeni Devamsızlık Ekle</a>

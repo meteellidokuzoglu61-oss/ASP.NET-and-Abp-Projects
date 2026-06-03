@@ -1,0 +1,43 @@
+﻿@model OgrenciApp.Models.Devamsizlik
+@{
+    ViewData["Title"] = "Devamsızlık Düzenle";
+}
+
+<h2>Devamsızlık Düzenle</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Ogrenci_AdSoyad" class="form-label">Öğrenci Adı Soyadı</label>
+        <input asp-for="Ogrenci_AdSoyad" class="form-control" />
+        <span asp-validation-for="Ogrenci_AdSoyad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Tarih" class="form-label"></label>
+        <input asp-for="Tarih" class="form-control" type="date" />
+        <span asp-validation-for="Tarih" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Durum" class="form-label"></label>
+        <select asp-for="Durum" class="form-select">
+            <option value="Devamsız" selected="@Model.Durum == " Devamsız"">Devamsız</option>
+            <option value="Geçerli" selected="@Model.Durum == " Geçerli"">Geçerli</option>
+        </select>
+        <span asp-validation-for="Durum" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Aciklama" class="form-label">Açıklama</label>
+        <input asp-for="Aciklama" class="form-control" />
+        <span asp-validation-for="Aciklama" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="DevamsizlikIndex" class="btn btn-secondary">İptal</a>
+</form>

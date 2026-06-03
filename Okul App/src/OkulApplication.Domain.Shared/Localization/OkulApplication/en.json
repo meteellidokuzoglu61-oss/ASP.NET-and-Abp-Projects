@@ -1,0 +1,44 @@
+{
+  "Culture": "en",
+  "Texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welcome",
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP. For more information, visit abp.io.",
+
+    "Menu:OkulApplication": "Okul App",
+    "Menu:Students": "Students",
+
+    "Actions": "Actions",
+    "Close": "Close",
+    "Delete": "Delete",
+    "Edit": "Edit",
+    "BirthTime": "Birth Date",
+    "NewStudent": "New Student",
+    "Name": "Student Name-Surname",
+    "Area Type": "Area Type",
+    "Number": "Number",
+    "CreationTime": "Creation time",
+    "AreYouSure": "Are you sure?",
+    "AreYouSureToDelete": "Are you sure you want to delete this item?",
+
+    "Enum:Branslar.0": "Bilişim Teknolojileri",
+    "Enum:Branslar.1": "Elektrik-Elektronik Teknolojisi",
+    "Enum:Branslar.2": "Makine ve Tasarım Teknolojisi",
+    "Enum:Branslar.3": "Endüstriyel Otomasyon Teknolojisi",
+
+    "Permission:OkulApplication": "Okul Uygulaması",
+
+    "Permission:Students": "Student Management",
+    "Permission:Students.Create": "Create Student",
+    "Permission:Students.Edit": "Edit Student",
+    "Permission:Students.Delete": "Delete Student",
+    "Permission:Ogretmenler": "Teacher Management",
+    "Permission:Ogretmenler.Create": "Create Teacher",
+    "Permission:Ogretmenler.Edit": "Edit Teacher",
+    "Permission:Ogretmenler.Delete": "Delete Teacher",
+    "Menu:TopluNotApp": "Toplu Not",
+    "Menu:TopluNotGiris": "Toplu Not Girişi",
+    "Menu:Devamsizlik": "Devamsızlık"
+
+  }
+}

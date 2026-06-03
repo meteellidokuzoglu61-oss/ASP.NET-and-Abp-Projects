@@ -1,0 +1,51 @@
+﻿@model OgrenciApp.Models.Ogrenci
+@{
+    var notlar = ViewBag.Notlar as List<OgrenciApp.Models.Not>;
+    ViewData["Title"] = "Öğrenci Detayı";
+}
+
+<h2>@Model.Ogrenci_AdiSoyadi - Profil</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <p><strong>Numara:</strong> @Model.Numarasi</p>
+        <p><strong>Sınıf:</strong> @Model.Ogrenci_Sinifi</p>
+        <p><strong>Şube:</strong> @Model.Ogrenci_Subesi</p>
+        <p><strong>Bölüm:</strong> @Model.Ogrenci_Bolumu</p>
+        <p><strong>Cinsiyet:</strong> @Model.Ogrenci_Cinsiyeti</p>
+        <p><strong>Telefon:</strong> @Model.Ogrenci_Telefon</p>
+        <p><strong>Email:</strong> @Model.Ogrenci_Emaili</p>
+    </div>
+</div>
+
+<h3>Notları</h3>
+@if (notlar != null && notlar.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ders</th>
+                <th>Proje</th>
+                <th>Yazılı</th>
+                <th>Sözlü</th>
+                <th>Dönem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in notlar)
+            {
+                <tr>
+                    <td>@n.DersAd</td>
+                    <td>@n.Proje</td>
+                    <td>@n.YaziliSinav</td>
+                    <td>@n.Sozlu</td>
+                    <td>@n.Donem</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Bu öğrenciye ait not bulunamadı.</p>
+}

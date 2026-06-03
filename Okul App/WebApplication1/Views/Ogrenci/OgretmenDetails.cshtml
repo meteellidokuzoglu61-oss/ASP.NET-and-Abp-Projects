@@ -1,0 +1,25 @@
+﻿@model OgrenciApp.Models.Ogretmen
+@Model.Ogretmen_Fotografi
+
+
+@{
+    ViewData["Title"] = "Öğretmen Detayı";
+}
+
+<h2>Öğretmen Bilgileri</h2>
+<hr />
+
+<div class="card p-3">
+    <h4>@Model.Ogretmen_AdiSoyadi</h4>
+    <p style=""><strong>Branş:</strong> @Model.Ogretmen_Bransi</p>
+    <p><strong>Doğum Tarihi:</strong> @Model.Ogretmen_DogumTarihi</p>
+    <p><strong>Fotoğrafı:</strong>@Model.Ogretmen_Fotografi</p>
+    <p><strong>Telefon Numarası:</strong>@Model.Ogretmen_Telefon</p>
+    <p><strong>Emaili:</strong>@Model.Ogretmen_Emaili</p>
+
+</div>
+
+<br />
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Düzenle</a>
+<a asp-action="Index" class="btn btn-secondary">Geri Dön</a>

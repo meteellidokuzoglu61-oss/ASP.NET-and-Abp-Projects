@@ -1,0 +1,324 @@
+﻿@model IEnumerable<OgrenciApp.Models.Duyuru>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+
+<div class="container mt-4">
+    <h4 class="mb-3 fw-bold">Hızlı Menü</h4>
+    <div class="row g-3">
+
+        <!-- Yeni Öğrenci Ekle -->
+        <div class="col-md-3">
+            <a href="/Ogrenci/Create" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h6 class="mt-2">Yeni Öğrenci Ekle</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/Home/OgrenciDetay" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h6 class="mt-2">Öğrenci Detayı</h6>
+                </div>
+            </a>
+        </div>
+        
+
+
+        <div class="col-md-3">
+            <a href="/Home/Rapor" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h6 class="mt-2">Basit Rapor</h6>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-3">
+            <a href="/Etkinlik/Index" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h6 class="mt-2">Etkinlikler</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="/Etkinlik/Create" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h6 class="mt-2">Yeni Etkinlik Ekle</h6>
+                </div>
+            </a>
+        </div>
+
+        <!-- Öğrenci Listesi -->
+        <div class="col-md-3">
+            <a href="/Ogrenci/Index" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-people fs-1 text-success"></i>
+                    <h6 class="mt-2">Öğrenci Listesi</h6>
+                </div>
+            </a>
+        </div>
+        <!-- Duyuru Ekle -->
+        <div class="col-md-3">
+            <a asp-controller="Duyuru" asp-action="Create" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-megaphone fs-1 text-warning"></i>
+                    <h6 class="mt-2">Duyuru Ekle</h6>
+                </div>
+            </a>
+        </div> 
+
+        <div class="col-md-3">
+            <a asp-controller="Home" asp-action="OgretmenRapor" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-megaphone fs-1 text-warning"></i>
+                    <h6 class="mt-2">Öğretmen Raporu</h6>
+                </div>
+            </a>
+        </div>
+
+        <p>Öğrenci karnesini PDF olarak indirmek için aşağıdaki butona tıklayın:</p
+        <div class="col-md-3">
+            <a asp-controller="Home" asp-action="OgrenciKarnePdf" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-megaphone fs-1 text-warning"></i>
+                    <h6 class="mt-2">Karne</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Sinif" asp-action="Index" class="text-decoration-none">
+               <div class="card shadow-sm text-center p-3">
+                  <h4 class="text-primary">📚 Sınıflar</h4>
+                  <p class="text-muted">Tüm sınıfları görüntüleyin →</p>
+              </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a asp-controller="Devamsizlik" asp-action="Create" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-calendar-x fs-1 text-danger"></i>
+                    <h6 class="mt-2">Devamsızlık Formu</h6>
+                </div>
+            </a>
+        </div>
+        
+         <div class="col-md-3">
+            <a asp-controller="Home" asp-action="TopluNotGiris" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-calendar-x fs-1 text-danger"></i>
+                    <h6 class="mt-2">Toplu Not Girişi</h6>
+                </div>
+            </a>
+         </div>
+
+            <div class="col-md-3">
+                <a asp-controller="Home" asp-action="NotIndex" class="text-decoration-none">
+                    <div class="card shadow-sm quick-card text-center p-3">
+                        <i class="bi bi-calendar-x fs-1 text-danger"></i>
+                        <h6 class="mt-2">Tüm Notlar</h6>
+                    </div>
+                </a>
+            </div>
+
+
+        <!-- Ayarlar -->
+        <div class="col-md-3">
+            <a href="/Setting/Index" class="text-decoration-none">
+                <div class="card shadow-sm quick-card text-center p-3">
+                    <i class="bi bi-gear fs-1 text-danger"></i>
+                    <h6 class="mt-2">Ayarlar</h6>
+            </div>
+          </a>
+          <p class="text-danger fw-bold">Bu Sekmeyi Yetkili Kişiler Kullanır</p>
+        </div>
+    <div>
+        <a href="/DersProgrami/Index " class="btn btn-outline-primary w-100">
+            📘 Ders Programı
+        </a>
+
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+            <h3 class="m-0">Duyurular</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var d in Model)
+                    {
+                        <li class="list-group-item">
+                            <strong>@d.Baslik</strong>
+                            <p class="m-1 text-muted">@d.Icerik</p>
+                            <span class="badge bg-info">@d.Tarih.ToShortDateString()</span>
+
+                            @if (!string.IsNullOrEmpty(d.FotoUrl))
+                            {
+                                <img src="@Url.Content(d.FotoUrl)" width="100" class="rounded mb-2" />
+                            }
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item text-center text-muted">Henüz duyuru bulunmamaktadır.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <section class="hero-section">
+        <h1 class="display-3 hero-title"><span class="highlight">Öğrenci Uygulamasına Hoşgeldiniz</span></h1>
+        <p class="lead"><span class="highlight-sm">ASP.NET Core ile geliştirilmiş modern öğrenci yönetim sistemi</span></p>
+    </section>
+</div>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Öne Çıkan Özellikler</h2>
+        <div class="row text-center">
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5 class="card-title">Öğrenci Yönetimi</h5>
+                        <p class="card-text">Ad, soyad, sınıf, bölüm, cinsiyet, telefon ve email bilgilerini kolayca ekleyin ve yönetin.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5 class="card-title">Fotoğraf Destekli</h5>
+                        <p class="card-text">İsteğe bağlı fotoğraf yükleyerek öğrenci listesinde görselliği artırın.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4 d-flex">
+                <div class="card shadow-sm flex-fill">
+                    <div class="card-body">
+                        <h5 class="card-title">Modern Tasarım</h5>
+                        <p class="card-text">Responsive ve profesyonel arayüz ile tüm cihazlarda sorunsuz kullanım.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row text-center mb-5">
+    <h2 class="hero-section">Uygulamamızı Kullanan Öğrenciler ve Öğretmenlerle İlgili İstatistikler</h2>
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="card shadow-lg p-4 rounded-4 border-0">
+            <h5 class="text-primary">Toplam Öğrenci</h5>
+            <p class="display-6 fw-bold">810</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="card shadow-lg p-4 rounded-4 border-0">
+            <h5 class="text-primary">Öğretmen Sayısı</h5>
+            <p class="display-6 fw-bold">87</p>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="card shadow-lg p-4 rounded-4 border-0">
+            <h5 class="text-primary">Derslik Sayısı</h5>
+            <p class="display-6 fw-bold">60</p>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-center mb-5" style="font-family: Arial">İletişim / Adres Bilgileri</h2>
+<div class="d-flex justify-content-center flex-wrap gap-3">
+    <div class="card shadow-lg rounded-4 p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body text-center">
+            <h5 class="card-title mb-3" style="color: #0d6efd; font-weight: bold;">Adres</h5>
+            <p class="card-text mb-1"><strong>Yazılım Uygulama Ofisi</strong></p>
+            <p class="card-text mb-1">Aydınlıkevler Mahallesi, 613. Sokak No:45</p>
+            <p class="card-text mb-1">Şehir: Ortahisar, Trabzon</p>
+            <p class="card-text mb-1">Posta Kodu: 61040</p>
+            <p class="card-text mb-1">Telefon: +90 312 123 14 61</p>
+            <p class="card-text">Email: <a href="mailto:info@yazilimofisi.com">info@yazilimofisi.com</a></p>
+        </div>
+    </div>
+
+    <div class="card shadow-lg rounded-4 p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body text-center">
+            <h5 class="card-title mb-3" style="color: #0d6efd; font-weight: bold;">Adres</h5>
+            <p class="card-text mb-1"><strong>Ellidokuzoğlu Bilgi Teknolojileri AŞ</strong></p>
+            <p class="card-text mb-1">Yavuz Selim Mahallesi, Anadolu Caddesi No:55</p>
+            <p class="card-text mb-1">Şehir: Gebze, Kocaeli</p>
+            <p class="card-text mb-1">Posta Kodu: 41400</p>
+            <p class="card-text mb-1">Telefon: +90 506 510 59 61</p>
+            <p class="card-text">Email: <a href="mailto:info@ellidokuzogluBT.com">info@ellidokuzogluBT.com</a></p>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .hero-section {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-title {
+            margin-bottom: 0.75rem;
+        }
+
+        .highlight {
+            display: inline-block;
+            background: #0A66FF;
+            color: #fff;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            line-height: 1.1;
+            box-decoration-break: clone;
+        }
+
+        .highlight-sm {
+            display: inline-block;
+            background: rgba(10,102,255,0.12);
+            color: #0a0a0a;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
+        @@media (max-width: 576px) {
+            .highlight {
+                padding: 0.2rem 0.45rem;
+                font-size: 1.5rem;
+            }
+
+            .hero-section {
+                padding-top: 28px;
+                padding-bottom: 28px;
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+}

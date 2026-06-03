@@ -1,0 +1,29 @@
+﻿@model IEnumerable<OgrenciApp.Models.Duyuru>
+
+@{
+    ViewData["Title"] = "Duyurular";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Başlık</th>
+            <th>İçerik</th>
+            <th>Tarih</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Baslik</td>
+                <td>@item.Icerik</td>
+                <td>@item.Tarih.ToString("dd.MM.yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>

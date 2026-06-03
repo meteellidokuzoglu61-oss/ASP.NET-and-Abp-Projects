@@ -1,0 +1,29 @@
+﻿@model List<OgrenciApp.Models.Not>
+
+<h2>Not Listesi</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Öğrenci</th>
+            <th>Ders</th>
+            <th>Proje</th>
+            <th>Yazılı</th>
+            <th>Sözlü</th>
+            <th>Dönem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var n in Model)
+        {
+            <tr>
+                <td>@n.OgrenciAd</td>
+                <td>@n.DersAd</td>
+                <td>@n.Proje</td>
+                <td>@n.YaziliSinav</td>
+                <td>@n.Sozlu</td>
+                <td>@n.Donem</td>
+            </tr>
+        }
+    </tbody>
+</table>

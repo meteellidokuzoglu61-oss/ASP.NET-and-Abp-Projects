@@ -1,0 +1,26 @@
+{
+  "culture": "tr",
+  "texts": {
+    "AppName": "OkulApplication",
+    "Menu:Home": "Ana sayfa",
+    "Welcome": "Hoşgeldiniz",
+    "LongWelcomeMessage": "Uygulamaya hoşgeldiniz. Bu, ABP framework'ü üzerine bina edilmiş bir başlangıç projesidir. Daha fazla bilgi için abp.io adresini ziyaret edebilirsiniz.",
+    "Menu:OkulApplication": "Okul Uygulaması",
+    "Menu:Students": "Öğrenciler",
+    "Actions": "Actions",
+    "Close": "Close",
+    "Delete": "Sil",
+    "Edit": "Güncelle",
+    "BirthTime": "Doğum Tarihi",
+    "NewBook": "Yeni Öğrenci",
+    "Name": "Öğrenci Adı-Soyadı",
+    "Area Type": "Bölümü",
+    "Number": "Numarası",
+    "CreationTime": "Oluşturulma Zamanı",
+    "AreYouSure": "Emin Misiniz?",
+    "AreYouSureToDelete": "Silmek İstediğinizden Emin Misiniz?",
+    "Menu:Kadromuz": "Kadromuz",
+    "Menu:Teachers": "Öğretmen İşlemleri",
+    "Menu:TeachersApp": "Öğretmenler"
+  }
+}

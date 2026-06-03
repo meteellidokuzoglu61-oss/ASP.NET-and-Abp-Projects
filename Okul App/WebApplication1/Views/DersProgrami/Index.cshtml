@@ -1,0 +1,25 @@
+﻿@model IEnumerable<OgrenciApp.Models.DersProgrami>
+
+<h2>Ders Programı</h2>
+
+<table class="table table-bordered text-center">
+    <thead class="table-primary">
+        <tr>
+            <th>Gün</th>
+            <th>Ders Saati</th>
+            <th>Ders</th>
+            <th>Öğretmen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model)
+        {
+            <tr>
+                <td>@d.Gun</td>
+                <td>@d.DersSaati</td>
+                <td>@d.DersAdi</td>
+                <td>@d.Ogretmen</td>
+            </tr>
+        }
+    </tbody>
+</table>

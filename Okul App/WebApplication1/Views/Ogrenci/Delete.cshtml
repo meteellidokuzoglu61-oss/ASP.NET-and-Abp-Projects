@@ -1,0 +1,21 @@
+﻿@model OgrenciApp.Models.Ogrenci
+
+@{
+    ViewData["Title"] = "Öğrenciyi Sil";
+}
+
+<h2>Öğrenciyi Sil</h2>
+<hr />
+
+<div class="alert alert-danger">
+    <strong>@Model.Ogrenci_AdiSoyadi</strong> adlı öğrenciyi silmek istediğinize emin misiniz?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Ogrenci_ID" />
+
+    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    <a asp-action="Delete" asp-route-id="@Model.Ogrenci_ID" class="btn btn-danger btn-sm">Sil</a>
+
+</form>

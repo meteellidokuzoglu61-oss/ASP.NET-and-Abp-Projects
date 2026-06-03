@@ -1,0 +1,29 @@
+﻿@model WebApplication1.Models.Kullanici
+
+@{
+    ViewBag.Title = "Kullanıcı Oluştur";
+}
+
+<div class="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+    <h2 class="text-xl font-semibold text-center">Yeni Kullanıcı Oluştur</h2>
+
+    @using (Html.BeginForm("CreateUser", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div>
+            <label class="block text-xs text-gray-600">Kullanıcı Adı</label>
+            @Html.TextBoxFor(m => m.Kullanici_Adi, new { @class = "mt-1 block w-full rounded-md border px-3 py-2 text-sm border-gray-200" })
+            @Html.ValidationMessageFor(m => m.Kullanici_Adi, "", new { @class = "text-xs text-red-500" })
+        </div>
+
+        <div>
+            <label class="block text-xs text-gray-600">Şifre</label>
+            @Html.PasswordFor(m => m.Kullanici_Sifresi, new { @class = "mt-1 block w-full rounded-md border px-3 py-2 text-sm border-gray-200" })
+            @Html.ValidationMessageFor(m => m.Kullanici_Sifresi, "", new { @class = "text-xs text-red-500" })
+        </div>
+
+        <button type="submit" class="w-full py-2 mt-2 rounded-lg bg-indigo-600 text-white font-medium hover:brightness-105">Oluştur</button>
+        @Html.ValidationSummary(true, "", new { @class = "text-xs text-red-500 mt-2" })
+    }
+</div>

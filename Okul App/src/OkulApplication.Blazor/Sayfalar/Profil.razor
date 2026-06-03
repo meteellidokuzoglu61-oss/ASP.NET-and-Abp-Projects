@@ -1,0 +1,69 @@
+﻿@page "/profilim"
+
+@using OkulApplication.Ogrenciler
+@using OkulApplication.Ogrenciler.Dtos
+@inject IOgrenciProfilAppService ProfilService
+
+<h3 class="mb-4">👤 Profilim</h3>
+
+@if (Yukleniyor)
+{
+    <div class="alert alert-info">
+        Profil bilgileri yükleniyor...
+    </div>
+}
+else if (HataMesaji != null)
+{
+    <div class="alert alert-danger">
+        @HataMesaji
+    </div>
+}
+else if (ProfilBilgi != null)
+{
+    <div class="card shadow-sm" style="max-width: 500px;">
+        <div class="card-body">
+
+            <div class="text-center mb-4">
+                <img src="@ProfilBilgi.FotografYolu ?? " /images/user.png""
+                     class="rounded-circle border"
+                     width="120"
+                     height="120" />
+            </div>
+
+            <p><b>Ad Soyad:</b> @ProfilBilgi.Ad @ProfilBilgi.Soyad</p>
+            <p><b>Email:</b> @ProfilBilgi.Email</p>
+            <p><b>Sınıf:</b> @ProfilBilgi.Sinif</p>
+            <p><b>Numara:</b> @ProfilBilgi.Numara</p>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        Profil bulunamadı.
+    </div>
+}
+
+@code {
+
+    private OgrenciProfilDto? ProfilBilgi;
+    private bool Yukleniyor = true;
+    private string? HataMesaji;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ProfilBilgi = await ProfilService.GetAsync();
+        }
+        catch (Exception ex)
+        {
+            HataMesaji = ex.Message;
+        }
+        finally
+        {
+            Yukleniyor = false;
+        }
+    }
+}

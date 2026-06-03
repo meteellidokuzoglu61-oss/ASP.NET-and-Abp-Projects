@@ -1,0 +1,26 @@
+﻿@model OgrenciApp.Models.Devamsizlik
+
+<h3>Bu devamsızlık kaydını silmek istediğinize emin misiniz?</h3>
+<hr />
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Öğrenci</dt>
+        <dd class="col-sm-9">@Model.Ogrenci_AdSoyad</dd>
+
+        <dt class="col-sm-3">Tarih</dt>
+        <dd class="col-sm-9">@Model.Tarih.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">Durum</dt>
+        <dd class="col-sm-9">@Model.Durum</dd>
+
+        <dt class="col-sm-3">Açıklama</dt>
+        <dd class="col-sm-9">@Model.Aciklama</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Sil</button>
+        <a asp-action="DevamsizlikIndex" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

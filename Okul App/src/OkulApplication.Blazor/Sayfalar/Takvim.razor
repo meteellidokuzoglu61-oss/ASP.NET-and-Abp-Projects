@@ -1,0 +1,75 @@
+﻿@page "/Akademik/Takvim"
+@using OkulApplication.Takvimler
+@using Volo.Abp.Application.Dtos
+@inject TakvimAppService TakvimService
+
+<h3>📅 Takvim</h3>
+
+<button class="btn btn-primary mb-3" @onclick="Yeni">
+    ➕ Yeni Etkinlik
+</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Başlangıç</th>
+            <th>Tip</th>
+            <th style="width:80px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Etkinlikler)
+        {
+            <tr>
+                <td>@item.Baslik</td>
+                <td>@item.BaslangicTarihi.ToString("dd.MM.yyyy")</td>
+                <td>@item.Tip</td>
+                <td>
+                    <button class="btn btn-danger btn-sm"
+                            @onclick="() => Sil(item.Id)">
+                        Sil
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+
+    private List<TakvimDto> Etkinlikler = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Yukle();
+    }
+
+    private async Task Yukle()
+    {
+        var result = await TakvimService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 100
+            });
+
+        Etkinlikler = result.Items.ToList();
+    }
+
+    private async Task Yeni()
+    {
+        await TakvimService.CreateAsync(new CreateUpdateTakvimDto
+        {
+            Baslik = "Yeni Etkinlik",
+            BaslangicTarihi = DateTime.Now,
+            Tip = TakvimEtkinlikTipi.Etkinlik
+        });
+
+        await Yukle();
+    }
+
+    private async Task Sil(Guid id)
+    {
+        await TakvimService.DeleteAsync(id);
+        await Yukle();
+    }
+}

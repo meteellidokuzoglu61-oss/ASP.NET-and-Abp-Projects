@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Alanlarımız";
+    var departments = ViewBag.Departments;
+}
+
+<h2>Alanlarımız</h2>
+
+@foreach (var d in departments)
+{
+    <div class="card p-3 mb-3">
+        <h4>@d.Name</h4>
+        <p>@d.Description</p>
+        <a href="@Url.Action("AlanDetay", "Alan", new { name = d.Name })" class="btn btn-primary">Detayları Gör</a>
+    </div>
+}

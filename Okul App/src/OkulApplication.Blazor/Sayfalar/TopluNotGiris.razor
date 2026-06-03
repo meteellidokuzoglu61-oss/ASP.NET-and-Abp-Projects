@@ -1,0 +1,176 @@
+﻿@page "/toplu-not-giris"
+@using System.ComponentModel.DataAnnotations
+@using OkulApplication.Notlar
+@inject NotAppService NotAppService
+@inject IJSRuntime JS
+
+<h3>Toplu Not Girişi</h3>
+
+<EditForm Model="@model" OnValidSubmit="Kaydet">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label><b>Ders Seçiniz:</b></label>
+        <InputSelect @bind-Value="seciliDers" class="form-control">
+            <option value="">Ders Seç</option>
+            @foreach (var ders in dersler)
+            {
+                <option value="@ders">@ders</option>
+            }
+        </InputSelect>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Sözlü</th>
+                <th>Yazılı</th>
+                <th>Proje</th>
+                <th>Ortalama</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ogr in model.Ogrenciler)
+            {
+                <tr>
+                    <td>@ogr.Ogrenci_AdiSoyadi</td>
+
+                    <td>
+                        <InputNumber TValue="decimal" class="form-control" min="0" max="100" placeholder="0"
+                                     @bind-Value="ogr.Sozlu"
+                                     @oninput="() => OrtalamaHesapla(ogr)" />
+                        <ValidationMessage For="@(() => ogr.Sozlu)" />
+                    </td>
+
+                    <td>
+                        <InputNumber TValue="decimal" class="form-control" min="0" max="100" placeholder="0"
+                                     @bind-Value="ogr.Yazili"
+                                     @oninput="() => OrtalamaHesapla(ogr)" />
+                        <ValidationMessage For="@(() => ogr.Yazili)" />
+                    </td>
+
+                    <td>
+                        <InputNumber TValue="decimal" class="form-control" min="0" max="100" placeholder="0"
+                                     @bind-Value="ogr.Proje"
+                                     @oninput="() => OrtalamaHesapla(ogr)" />
+                        <ValidationMessage For="@(() => ogr.Proje)" />
+                    </td>
+
+                    <td>
+                        <input type="text"
+                               class="form-control text-center"
+                               value="@ogr.Ortalama.ToString("0.00")"
+                               readonly />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</EditForm>
+
+@if (kayitliNotlar.Any())
+{
+    <h4 class="mt-4">Kayıtlı Notlar</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Ders</th>
+                <th>Sözlü</th>
+                <th>Yazılı</th>
+                <th>Proje</th>
+                <th>Ortalama</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var n in kayitliNotlar)
+            {
+                <tr>
+                    <td>@n.Ogrenci_AdiSoyadi</td>
+                    <td>@n.Ders</td>
+                    <td>@n.Sozlu</td>
+                    <td>@n.Yazili</td>
+                    <td>@n.Proje</td>
+                    <td>@n.Ortalama</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private TopluNotModel model = new();
+    private List<Not> kayitliNotlar = new();
+    private string seciliDers;
+
+    private List<string> dersler = new()
+    {
+        "Matematik", "Türkçe", "Fen Bilimleri", "Sosyal Bilgiler", "İngilizce"
+    };
+
+    protected override void OnInitialized()
+    {
+        model.Ogrenciler = new List<OgrenciViewModel>
+        {
+            new() { Ogrenci_AdiSoyadi = "Mete Ellidokuzoğlu" },
+            new() { Ogrenci_AdiSoyadi = "Ahmet Yılmaz" },
+            new() { Ogrenci_AdiSoyadi = "Ayşe Demir" }
+        };
+    }
+
+    private void OrtalamaHesapla(OgrenciViewModel ogr)
+    {
+        ogr.Ortalama = Math.Round(
+            (ogr.Sozlu + ogr.Yazili + ogr.Proje) / 3);
+    }
+
+    private async Task Kaydet()
+    {
+        if (string.IsNullOrWhiteSpace(seciliDers))
+        {
+            await JS.InvokeVoidAsync("alert", "Ders seçmelisiniz!");
+            return;
+        }
+
+        var notlar = model.Ogrenciler.Select(o => new Not
+        {
+            Ogrenci_AdiSoyadi = o.Ogrenci_AdiSoyadi,
+            Ders = seciliDers,
+            Sozlu = o.Sozlu,
+            Yazili = o.Yazili,
+            Proje = o.Proje,
+            Ortalama = o.Ortalama
+
+        }).ToList();
+
+        await NotAppService.TopluNotGirisAsync(notlar);
+        kayitliNotlar.AddRange(notlar);
+
+        await JS.InvokeVoidAsync("alert", "Notlar başarıyla kaydedildi!");
+    }
+
+    public class TopluNotModel
+    {
+        public List<OgrenciViewModel> Ogrenciler { get; set; } = new();
+    }
+
+    public class OgrenciViewModel
+    {
+        public string Ogrenci_AdiSoyadi { get; set; }
+
+        [Range(0, 100, ErrorMessage = "0 – 100 arası giriniz")]
+        public decimal Sozlu { get; set; }
+
+        [Range(0, 100, ErrorMessage = "0 – 100 arası giriniz")]
+        public decimal Yazili { get; set; }
+
+        [Range(0, 100, ErrorMessage = "0 – 100 arası giriniz")]
+        public decimal Proje { get; set; }
+
+        public decimal Ortalama { get; set; }
+    }
+}

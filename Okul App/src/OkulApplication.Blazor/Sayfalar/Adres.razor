@@ -1,0 +1,39 @@
+﻿@page "/adresler"
+@using OkulApplication.Adresler.ViewModels
+@using OkulApplication.Adresler
+@inject AdresAppService AdresAppService
+
+<h2 class="text-center mb-5" style="font-family: Arial">İletişim / Adres Bilgileri</h2>
+
+@if (adresler == null)
+{
+    <p>Adresler yükleniyor...</p>
+}
+else
+{
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+        @foreach (var a in adresler)
+        {
+            <div class="card shadow-lg rounded-4 p-4" style="max-width: 500px; width: 100%;">
+                <div class="card-body text-center">
+                    <h5 class="card-title mb-3" style="color: #0d6efd; font-weight: bold;">Adres</h5>
+                    <p class="card-text mb-1"><strong>@a.SirketAdi</strong></p>
+                    <p class="card-text mb-1">@a.Mahalle, @a.Sokak</p>
+                    <p class="card-text mb-1">Şehir: @a.Ilce, @a.Sehir</p>
+                    <p class="card-text mb-1">Posta Kodu: @a.PostaKodu</p>
+                    <p class="card-text mb-1">Telefon: @a.Telefon</p>
+                    <p class="card-text">Email: <a href="mailto:@a.Email">@a.Email</a></p>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<AdresViewModel> adresler;
+
+    protected override async Task OnInitializedAsync()
+    {
+        adresler = await AdresAppService.GetAdreslerAsync();
+    }
+}

@@ -1,0 +1,27 @@
+﻿@{
+    var saatler = ViewBag.Saatler;
+}
+
+<h2 class="text-center mb-4">Okul Ders Saatleri</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Ders</th>
+            <th>Başlangıç</th>
+            <th>Bitiş</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in saatler)
+        {
+            <tr>
+                <td>@s.Ders</td>
+                <td>@s.Baslangic</td>
+                <td>@s.Bitis</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<strong>Not:</strong><p>Her Tenefüs 10 Dakikadır</p>

@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = ViewBag.Name + " - Özgeçmiş";
+}
+
+<div class="container py-5">
+
+    <div class="card p-4 shadow-lg" style="border-radius:18px;">
+
+        <h2 class="text-center mb-4">@ViewBag.Name</h2>
+        <h4 class="text-center text-primary">@ViewBag.Role</h4>
+
+        <hr />
+
+        <h5><strong>Eğitim</strong></h5>
+        <p>@ViewBag.Education</p>
+
+        <h5><strong>Deneyim</strong></h5>
+        <p>@ViewBag.Experience</p>
+
+        <h5><strong>E-Posta</strong></h5>
+        <p>@ViewBag.Email</p>
+
+        <h5><strong>Telefon</strong></h5>
+        <p>@ViewBag.Phone</p>
+
+        <div class="text-center mt-4">
+            <a href="/Home/Kadromuz" class="btn btn-primary">← Kadroya Dön</a>
+        </div>
+    </div>
+
+</div>
