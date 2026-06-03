@@ -1,0 +1,105 @@
+﻿@page "/Akademik/Mufredat"
+@using OkulApplication.Mufredatlar
+@using OkulApplication.Ders_Akademik
+@using Volo.Abp.Application.Dtos
+
+@inject MufredatAppService MufredatService
+@inject DersAppService DersService
+
+
+
+
+<button class="btn btn-primary mb-3" @onclick="ModalAc">
+    ➕ Yeni Müfredat
+</button>
+
+<Modal @bind-Visible="ModalGoster">
+    <ModalHeader>
+        <h5>📘 Yeni Müfredat</h5>
+    </ModalHeader>
+
+    <ModalBody>
+        <div class="mb-2">
+            <label>Ders</label>
+            <select class="form-select" @bind="YeniKayit.DersId">
+                <option value="@Guid.Empty">-- Ders Seçiniz --</option>
+                @foreach (var ders in Dersler)
+                {
+                    <option value="@ders.Id">@ders.Ad</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-2">
+            <label>Sınıf</label>
+            <input type="number" class="form-control" @bind="YeniKayit.Sinif" />
+        </div>
+
+        <div class="mb-2">
+            <label>Dönem</label>
+            <input type="number" class="form-control" @bind="YeniKayit.Donem" />
+        </div>
+    </ModalBody>
+
+    <ModalFooter>
+        <button class="btn btn-secondary" @onclick="ModalKapat">İptal</button>
+        <button class="btn btn-success" @onclick="Kaydet">Kaydet</button>
+    </ModalFooter>
+</Modal>
+
+@code {
+
+    List<MufredatDto> Mufredatlar = new();
+    List<DerslerDto> Dersler = new();
+
+    bool ModalGoster;
+
+    CreateUpdateMufredatDto YeniKayit = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DersleriYukle();
+        await MufredatlariYukle();
+    }
+
+    private async Task DersleriYukle()
+    {
+        var result = await DersService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 100
+            });
+
+        Dersler = result.Items.ToList();
+    }
+
+    private async Task MufredatlariYukle()
+    {
+        var result = await MufredatService.GetListAsync(
+            new PagedAndSortedResultRequestDto());
+
+        Mufredatlar = result.Items.ToList();
+    }
+
+    private void ModalAc()
+    {
+        CreateUpdateMufredatDto YeniKayit = new()
+        {
+            DersId = Guid.Empty
+        };
+
+        ModalGoster = true;
+    }
+
+    private void ModalKapat()
+    {
+        ModalGoster = false;
+    }
+
+    private async Task Kaydet()
+    {
+        await MufredatService.CreateAsync(YeniKayit);
+        ModalGoster = false;
+        await MufredatlariYukle();
+    }
+}

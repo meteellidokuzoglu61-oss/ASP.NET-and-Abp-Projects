@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OkulApplication.Ders_Akademik;
+using System.Threading.Tasks;
 
 namespace OkulApplication.HttpApi.Client.ConsoleTestApp;
 

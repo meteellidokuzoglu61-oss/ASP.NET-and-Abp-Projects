@@ -1,0 +1,91 @@
+﻿@page "/ogrenci-not-rapor"
+@inject OkulApplication.Notlar.NotAppService NotAppService
+@inject IJSRuntime JS
+
+
+<script src="js/download.js"></script>
+
+
+
+<h3 class="mb-3">Öğrenci Not Raporu</h3>
+
+<div class="mb-3 d-flex gap-3">
+    <InputText @bind-Value="seciliSinif" placeholder="Sınıf (örn: 10)" class="form-control" />
+    <InputText @bind-Value="seciliSube" placeholder="Şube (örn: A)" class="form-control" />
+    <button class="btn btn-primary" @onclick="Filtrele">Filtrele</button>
+    <button class="btn btn-success" @onclick="PdfIndir">PDF İndir</button>
+</div>
+
+
+@if (raporlar == null)
+{
+    <p>Rapor yükleniyor...</p>
+}
+else if (!raporlar.Any())
+{
+    <p>Hiç not bulunamadı.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Öğrenci</th>
+                <th>Sınıf</th>
+                <th>Şube</th>
+                <th>Ders</th>
+                <th>Sözlü</th>
+                <th>Yazılı</th>
+                <th>Proje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in raporlar)
+            {
+                <tr>
+                    <td>@r.OgrenciAdiSoyadi</td>
+                    <td>@r.Sinif</td>
+                    <td>@r.Sube</td>
+                    <td>@r.Ders</td>
+                    <td>@r.Sozlu</td>
+                    <td>@r.Yazili</td>
+                    <td>@r.Proje</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<OkulApplication.Notlar.ViewModels.OgrenciNotRaporViewModel> raporlar;
+    private string seciliSinif;
+    private string seciliSube;
+
+    protected override async Task OnInitializedAsync()
+    {
+        raporlar = await NotAppService.GetRaporAsync();
+    }
+
+    private async Task Filtrele()
+    {
+        raporlar = await NotAppService.GetRaporAsync(seciliSinif, seciliSube);
+    }
+
+    private async Task PdfIndir()
+    {
+        if (raporlar == null || !raporlar.Any())
+        {
+            await JS.InvokeVoidAsync("alert", "PDF oluşturmak için rapor listesi boş!");
+            return;
+        }
+
+        var pdfBytes = NotAppService.OlusturPdf(raporlar);
+        var base64 = Convert.ToBase64String(pdfBytes);
+        var fileName = "OgrenciNotRaporu.pdf";
+        await JS.InvokeVoidAsync("downloadFileFromBase64", fileName, base64);
+    }
+
+
+}
+
+

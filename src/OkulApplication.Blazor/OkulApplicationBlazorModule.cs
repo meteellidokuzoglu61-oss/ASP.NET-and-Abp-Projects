@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Volo.Abp.MultiTenancy;
 using OkulApplication.Blazor.Components;
 using OkulApplication.Blazor.Menus;
 using OkulApplication.EntityFrameworkCore;
@@ -58,7 +59,6 @@ namespace OkulApplication.Blazor;
     typeof(AbpAspNetCoreComponentsServerLeptonXLiteThemeModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AbpIdentityBlazorServerModule),
-    typeof(AbpTenantManagementBlazorServerModule),
     typeof(AbpSettingManagementBlazorServerModule)
    )]
 public class OkulApplicationBlazorModule : AbpModule
@@ -106,6 +106,10 @@ public class OkulApplicationBlazorModule : AbpModule
         PreConfigure<AbpAspNetCoreComponentsWebOptions>(options =>
         {
             options.IsBlazorWebApp = true;
+        });
+        Configure<AbpMultiTenancyOptions>(options =>
+        {
+            options.IsEnabled = false; // 🔥 TENANT TAMAMEN KAPALI
         });
     }
 
@@ -259,7 +263,6 @@ public class OkulApplicationBlazorModule : AbpModule
 
         if (MultiTenancyConsts.IsEnabled)
         {
-            app.UseMultiTenancy();
         }
         app.UseUnitOfWork();
         app.UseDynamicClaims();

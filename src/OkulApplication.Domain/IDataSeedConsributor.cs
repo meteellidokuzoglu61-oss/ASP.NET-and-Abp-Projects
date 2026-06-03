@@ -34,7 +34,7 @@ namespace OkulApplication.DataSeed
                     await _ogrenciRepository.InsertAsync(new Ogrenci
                     {
                         Ogrenci_AdiSoyadi = "Halim Bilici",
-                        Ogrenci_Bolumu = Bolum.Bilişim_Teknolojileri,
+                        Ogrenci_Bolumu = Bolum.BilişimTeknolojileri,
                         Ogrenci_Sinifi = "12",
                         Ogrenci_Subesi = "A",
                         Ogrenci_DogumTarihi = new DateTime(2005, 10, 14),

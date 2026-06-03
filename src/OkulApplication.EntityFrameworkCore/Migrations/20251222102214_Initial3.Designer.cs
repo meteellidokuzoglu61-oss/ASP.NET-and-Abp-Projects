@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace OkulApplication.Migrations
 {
     [DbContext(typeof(OkulApplicationDbContext))]
-    [Migration("20251209133143_Initial")]
-    partial class Initial
+    [Migration("20251222102214_Initial3")]
+    partial class Initial3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,149 @@ namespace OkulApplication.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dersler", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Ad")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DeleterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("DeleterId");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("DeletionTime");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<string>("Kodu")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Kredi")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppDersler", (string)null);
+                });
+
+            modelBuilder.Entity("OkulApplication.Devamsizlik.DevamsizlikKaydi", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTime>("Devamsizlik_Tarihi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("OgrenciId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Tip")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppDevamsizlik", (string)null);
+                });
+
+            modelBuilder.Entity("OkulApplication.Notlar.Not", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Ders")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ogrenci_AdiSoyadi")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OlusturmaTarihi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal>("Ortalama")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Proje")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Sozlu")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Yazili")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppNotlar", (string)null);
+                });
 
             modelBuilder.Entity("OkulApplication.Ogrenciler.Ogrenci", b =>
                 {
@@ -81,7 +224,20 @@ namespace OkulApplication.Migrations
 
                     b.Property<string>("Ogrenci_Subesi")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)");
+
+                    b.Property<decimal>("Ortalama")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Proje")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Sozlu")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Yazili")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -136,6 +292,10 @@ namespace OkulApplication.Migrations
                     b.Property<DateTime>("Ogretmen_DogumTarhi")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("Ogretmen_Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Ogretmen_Sinif")
                         .HasColumnType("integer");
 
@@ -144,9 +304,71 @@ namespace OkulApplication.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("character varying(5)");
 
+                    b.Property<decimal>("Ogretmen_Telefon")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Unvan")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Ogretmenler", (string)null);
+                });
+
+            modelBuilder.Entity("OkulApplication.Takvimler.Takvim", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("BaslangicTarihi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Baslik")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("BitisTarihi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<Guid?>("DersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("Tip")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Takvimler", (string)null);
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

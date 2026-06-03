@@ -13,6 +13,10 @@ public class OgretmenDto : AuditedEntityDto<Guid>
 
     public Branslar Ogretmen_Bransi { get; set; }
 
+    public decimal Ogretmen_Telefon { get; set; }
+
+    public string Ogretmen_Email { get; set; }
+
     public int Ogretmen_Sinif { get; set; }
     public string Ogretmen_Sube { get; set; }
 }

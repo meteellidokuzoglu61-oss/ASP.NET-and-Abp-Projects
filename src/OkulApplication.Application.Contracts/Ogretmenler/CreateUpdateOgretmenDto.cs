@@ -14,9 +14,13 @@ public class CreateUpdateOgretmenDto
     [Required]
     public Branslar Ogretmen_Bransi { get; set; } = Branslar.MakineVeTasarim_Teknolojisi;
 
-    [Required]
-    [DataType(DataType.Date)]
-    public DateTime Ogretmen_DogumTarihi { get; set; } = DateTime.Now;
+    public DateTime Ogretmen_DogumTarihi { get; set; } 
+
+    public decimal Ogretmen_Telefon { get; set; }
+
+    [Required, StringLength(128)]
+
+    public string Ogretmen_Email { get; set; }
 
     [Required]
     [StringLength(128)]

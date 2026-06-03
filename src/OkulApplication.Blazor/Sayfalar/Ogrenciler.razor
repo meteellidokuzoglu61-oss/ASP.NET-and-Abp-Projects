@@ -4,7 +4,7 @@
 @using OkulApplication.Localization
 @attribute [Authorize(OkulApplicationPermissions.Ogrenciler.Default)]
 @using OkulApplication.Permissions
-@inherits AbpCrudPageBase<IOgrenciAppService, OgrenciDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateOgrenciDto>
+@inherits AbpCrudPageBase<OgrenciAppService, OgrenciDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateOgrenciDto>
 
 <Card>
     <CardHeader>
@@ -91,19 +91,6 @@
         </DataGrid>
     </CardBody>
 </Card>
-
-@code
-{
-    public Ogrenciler() // Constructor
-    {
-        LocalizationResource = typeof(OkulApplicationResource);
-
-        CreatePolicyName = OkulApplicationPermissions.Ogrenciler.Create;
-        UpdatePolicyName = OkulApplicationPermissions.Ogrenciler.Edit;
-        DeletePolicyName = OkulApplicationPermissions.Ogrenciler.Delete;
-    }
-}
-
 
 <CardHeader>
     <Row Class="justify-content-between">
@@ -266,4 +253,14 @@
     </ModalContent>
 </Modal>
 
+@code
+{
+    public Ogrenciler() // Constructor
+    {
+        LocalizationResource = typeof(OkulApplicationResource);
 
+        CreatePolicyName = OkulApplicationPermissions.Ogrenciler.Create;
+        UpdatePolicyName = OkulApplicationPermissions.Ogrenciler.Edit;
+        DeletePolicyName = OkulApplicationPermissions.Ogrenciler.Delete;
+    }
+}

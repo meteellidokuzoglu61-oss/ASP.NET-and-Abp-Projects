@@ -1,0 +1,76 @@
+﻿@page "/kadromuz"
+@using OkulApplication.Ogretmenler
+@using Volo.Abp.Application.Dtos
+
+@inject IOgretmenAppService OgretmenAppService
+
+<h2 class="text-center mt-4 mb-4">Kadromuz</h2>
+
+<!-- 🔍 ARAMA -->
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <input class="form-control"
+               placeholder="Öğretmen adı veya branş ara..."
+               @bind="Arama"
+               @bind:event="oninput" />
+    </div>
+</div>
+
+@if (!FiltreliOgretmenler.Any())
+{
+    <div class="alert alert-info text-center">
+        Öğretmen bulunamadı.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var ogr in FiltreliOgretmenler)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100" style="border-radius:12px;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@ogr.Ogretmen_AdiSoyadi</h5>
+                        <p class="text-muted">@ogr.Ogretmen_Bransi</p>
+
+                        @if (ogr.Ogretmen_Telefon != 0)
+                        {
+                            <p><i class="fa fa-phone"></i> @ogr.Ogretmen_Telefon</p>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(ogr.Ogretmen_Email))
+                        {
+                            <p><i class="fa fa-envelope"></i> @ogr.Ogretmen_Email</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    List<OgretmenDto> Ogretmenler = new();
+    string Arama = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await OgretmenAppService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 1000,
+                Sorting = "Ogretmen_AdiSoyadi"
+            });
+
+        Ogretmenler = result.Items.ToList();
+    }
+    IEnumerable<OgretmenDto> FiltreliOgretmenler =>
+        Ogretmenler.Where(o =>
+            string.IsNullOrWhiteSpace(Arama) ||
+            o.Ogretmen_AdiSoyadi.Contains(Arama, StringComparison.OrdinalIgnoreCase) ||
+            o.Ogretmen_Bransi
+                .ToString()
+                .Contains(Arama, StringComparison.OrdinalIgnoreCase)
+        );
+}

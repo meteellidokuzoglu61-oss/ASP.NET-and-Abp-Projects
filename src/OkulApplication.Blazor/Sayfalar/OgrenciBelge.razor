@@ -1,0 +1,164 @@
+﻿@page "/belgeler/ogrenci"
+
+@using OkulApplication.Ogrenci_Belgeler
+@using Volo.Abp.Application.Dtos
+@inject IOgrenciBelgeAppService BelgeService
+
+<h3 class="mb-3">📄 Öğrenci Belgeleri</h3>
+
+<button class="btn btn-primary mb-3" @onclick="ModalAc">
+    ➕ Belge Yükle
+</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Belge Adı</th>
+            <th>Tür</th>
+            <th>Tarih</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Belgeler.Any())
+        {
+            @foreach (var belge in Belgeler)
+            {
+                <tr>
+                    <td>@belge.BelgeAdi</td>
+                    <td>@belge.DosyaTuru</td>
+                    <td>@belge.YuklemeTarihi.ToShortDateString()</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                @onclick="() => Sil(belge.Id)">
+                            🗑 Sil
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    Henüz belge eklenmemiş
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* ================= MODAL ================= *@
+@if (ModalGoster)
+{
+    <div class="modal fade show d-block"
+         tabindex="-1"
+         style="background-color: rgba(0,0,0,0.5);">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">📄 Yeni Belge Yükle</h5>
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="ModalKapat"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Belge Adı</label>
+                        <input class="form-control"
+                               @bind="YeniBelge.BelgeAdi" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dosya Türü</label>
+                        <select class="form-select"
+                                @bind="YeniBelge.DosyaTuru">
+                            <option value="">Seçiniz</option>
+                            <option value="PDF">PDF</option>
+                            <option value="Word">Word</option>
+                            <option value="Resim">Resim</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Yükleme Tarihi</label>
+                        <input type="date"
+                               class="form-control"
+                               @bind="YeniBelge.YuklemeTarihi" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary"
+                            @onclick="ModalKapat">
+                        İptal
+                    </button>
+
+                    <button class="btn btn-success"
+                            @onclick="Kaydet">
+                        💾 Kaydet
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    private List<OgrenciBelgeDto> Belgeler = new();
+    private CreateUpdateOgrenciBelgeDto YeniBelge = new();
+    private bool ModalGoster;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BelgeleriYukle();
+    }
+
+    private async Task BelgeleriYukle()
+    {
+        var result = await BelgeService.GetListAsync(
+            new PagedAndSortedResultRequestDto
+            {
+                MaxResultCount = 100
+            });
+
+        Belgeler = result.Items.ToList();
+    }
+
+    private void ModalAc()
+    {
+        YeniBelge = new CreateUpdateOgrenciBelgeDto
+        {
+            YuklemeTarihi = DateTime.Today
+        };
+
+        ModalGoster = true;
+    }
+
+    private void ModalKapat()
+    {
+        ModalGoster = false;
+    }
+
+    private async Task Kaydet()
+    {
+        YeniBelge.DosyaYolu = $"Belgeler/{Guid.NewGuid()}.{YeniBelge.DosyaTuru.ToLower()}";
+        YeniBelge.YuklemeTarihi = DateTime.Today;
+
+        await BelgeService.CreateAsync(YeniBelge);
+        ModalGoster = false;
+        await BelgeleriYukle();
+    }
+
+
+    private async Task Sil(Guid id)
+    {
+        await BelgeService.DeleteAsync(id);
+        await BelgeleriYukle();
+    }
+}

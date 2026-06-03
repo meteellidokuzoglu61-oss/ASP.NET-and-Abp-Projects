@@ -1,0 +1,105 @@
+﻿@page "/devamsizlik"
+@using Blazorise
+@using OkulApplication.Devamsizlik
+@using OkulApplication.Ogrenciler
+@inject DevamsizlikAppService DevamsizlikService
+@inject OgrenciAppService OgrenciService
+
+<h3>Devamsızlık Girişi</h3>
+
+<EditForm Model="@model" OnValidSubmit="SaveAsync">
+    <DataAnnotationsValidator />
+    <Blazorise.ValidationSummary />
+    <div class="mb-2">
+        <label>Öğrenci</label>
+        <select class="form-select"
+                @bind="model.OgrenciId">
+            <option value="@Guid.Empty">Seçiniz</option>
+            @foreach (var ogr in ogrenciler)
+            {
+                <option value="@ogr.Id">@ogr.Ogrenci_AdiSoyadi</option>
+            }
+        </select>
+    </div>
+
+
+    <div class="mb-2">
+        <label>Tarih</label>
+        <InputDate @bind-Value="model.Devamsizlik_Tarihi" class="form-control" />
+    </div>
+
+    <div class="mb-2">
+        <label>Devamsızlık Tipi</label>
+
+        <InputSelect @bind-Value="model.Tip" class="form-select">
+            <option value="">Seçiniz</option>
+            <option value="@Devamsizlik_Tipi.Ozursuz">Özürsüz</option>
+            <option value="@Devamsizlik_Tipi.Ozurlu">Özürlü</option>
+        </InputSelect>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</EditForm>
+
+<hr />
+
+<h4>Devamsızlık Kayıtları</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Öğrenci</th>
+            <th>Tarih</th>
+            <th>Tip</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kayit in kayitlar)
+        {
+            <tr>
+                <td>@kayit.OgrenciAdi</td>
+                <td>@kayit.Tarih.ToShortDateString()</td>
+                <td>@kayit.Tip</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private CreateUpdateDevamsizlikDto model = new();
+    private List<OgrenciDto> ogrenciler = new();
+    private List<DevamsizlikListDto> kayitlar = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ogrenciler = (await OgrenciService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto())).Items.ToList();
+        await LoadKayitlarAsync();
+    }
+
+    private async Task SaveAsync()
+    {
+        await DevamsizlikService.CreateAsync(model);
+        model = new CreateUpdateDevamsizlikDto(); // formu temizle
+        await LoadKayitlarAsync();
+    }
+
+    private async Task LoadKayitlarAsync()
+    {
+        var list = await DevamsizlikService.GetListAsync(new Volo.Abp.Application.Dtos.PagedAndSortedResultRequestDto());
+        kayitlar = (from k in list.Items
+                    join o in ogrenciler on k.OgrenciId equals o.Id
+                    select new DevamsizlikListDto
+                    {
+                        OgrenciAdi = o.Ogrenci_AdiSoyadi,
+                        Tarih = k.Devamsizlik_Tarihi,
+                        Tip = k.Tip
+                    }).ToList();
+    }
+
+    public class DevamsizlikListDto
+    {
+        public string OgrenciAdi { get; set; }
+        public DateTime Tarih { get; set; }
+        public Devamsizlik_Tipi Tip { get; set; }
+    }
+}

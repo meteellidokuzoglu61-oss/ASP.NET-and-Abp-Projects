@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace OkulApplication.Ogretmenler
@@ -18,7 +16,11 @@ namespace OkulApplication.Ogretmenler
         public int Ogretmen_Sinif {  get; set; }
         public string Ogretmen_Sube { get; set; }
 
+        public decimal Ogretmen_Telefon {  get; set; }
 
+        public string Ogretmen_Email { get; set; }
+
+        public string Unvan { get; set; }
 
 
 

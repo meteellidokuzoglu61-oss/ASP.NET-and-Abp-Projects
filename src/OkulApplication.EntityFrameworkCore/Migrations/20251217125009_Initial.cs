@@ -431,15 +431,60 @@ namespace OkulApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppDersler",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Ad = table.Column<string>(type: "text", nullable: false),
+                    Kodu = table.Column<string>(type: "text", nullable: false),
+                    Kredi = table.Column<int>(type: "integer", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppDersler", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppNotlar",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Ogrenci_AdiSoyadi = table.Column<string>(type: "text", nullable: false),
+                    Ders = table.Column<string>(type: "text", nullable: false),
+                    Sozlu = table.Column<decimal>(type: "numeric", nullable: false),
+                    Yazili = table.Column<decimal>(type: "numeric", nullable: false),
+                    Proje = table.Column<decimal>(type: "numeric", nullable: false),
+                    Ortalama = table.Column<decimal>(type: "numeric", nullable: false),
+                    OlusturmaTarihi = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppNotlar", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppOgrenciler",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Ogrenci_AdiSoyadi = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     Ogrenci_Sinifi = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
-                    Ogrenci_Subesi = table.Column<string>(type: "text", nullable: false),
+                    Ogrenci_Subesi = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
+                    Sozlu = table.Column<decimal>(type: "numeric", nullable: false),
+                    Yazili = table.Column<decimal>(type: "numeric", nullable: false),
+                    Proje = table.Column<decimal>(type: "numeric", nullable: false),
                     Ogrenci_DogumTarihi = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Ogrenci_Bolumu = table.Column<int>(type: "integer", nullable: false),
+                    Ortalama = table.Column<decimal>(type: "numeric", nullable: false),
                     Numarasi = table.Column<int>(type: "integer", nullable: false),
                     ExtraProperties = table.Column<string>(type: "text", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
@@ -464,6 +509,9 @@ namespace OkulApplication.Migrations
                     Ogretmen_Bransi = table.Column<int>(type: "integer", nullable: false),
                     Ogretmen_Sinif = table.Column<int>(type: "integer", nullable: false),
                     Ogretmen_Sube = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
+                    Ogretmen_Telefon = table.Column<decimal>(type: "numeric", nullable: false),
+                    Ogretmen_Email = table.Column<string>(type: "text", nullable: false),
+                    Unvan = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
                     ExtraProperties = table.Column<string>(type: "text", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -1176,6 +1224,12 @@ namespace OkulApplication.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "AppDersler");
+
+            migrationBuilder.DropTable(
+                name: "AppNotlar");
 
             migrationBuilder.DropTable(
                 name: "AppOgrenciler");

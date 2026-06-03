@@ -1,0 +1,102 @@
+﻿@page "/ders-duzenle/{Id:guid}"
+@using Blazorise
+@using Blazorise.Components
+@inject IDersAppService DersService
+@inject NavigationManager Navigation
+
+<h3>Ders Düzenle</h3>
+
+@if (model == null)
+{
+    <p>Yükleniyor...</p>
+}
+else
+{
+    <Validations @ref="validations">
+
+        <Field>
+            <Label>Ders Adı</Label>
+            <TextEdit @bind-Text="model.Ad" Required />
+        </Field>
+
+        <Field>
+            <Label>Ders Kodu</Label>
+            <TextEdit @bind-Text="model.Kodu" Required />
+        </Field>
+
+        <Field>
+            <Label>Kredi</Label>
+            <NumericEdit @bind-Value="model.Kredi" Min="1" Required />
+        </Field>
+
+        <Button Color="Color.Primary" Clicked="Guncelle">
+            Güncelle
+        </Button>
+
+        <Button Color="Color.Secondary" Class="ms-2" Clicked="Iptal">
+            İptal
+        </Button>
+
+    </Validations>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private CreateUpdateDerslerDto model;  // Form modeli
+    private Validations validations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // ID ile ders bilgilerini getir
+            var ders = await DersService.GetAsync(Id);
+
+            if (ders == null)
+            {
+                Navigation.NavigateTo("/derslerim");
+                return;
+            }
+
+            // DerslerDto -> CreateUpdateDerslerDto
+            model = new CreateUpdateDerslerDto
+            {
+                Ad = ders.Ad,
+                Kodu = ders.Kodu,
+                Kredi = ders.Kredi
+            };
+        }
+        catch (Exception)
+        {
+            // Hata durumunda listeye yönlendir
+            Navigation.NavigateTo("/derslerim");
+        }
+    }
+
+    private async Task Guncelle()
+    {
+        if (!await validations.ValidateAll())
+            return;
+
+        try
+        {
+            // UpdateAsync: CreateUpdateDerslerDto kullan
+            await DersService.UpdateAsync(Id, model);
+
+            // Başarılı ise listeye dön
+            Navigation.NavigateTo("/derslerim");
+        }
+        catch (Exception ex)
+        {
+            // Hata mesajı göstermek için
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void Iptal()
+    {
+        Navigation.NavigateTo("/derslerim");
+    }
+}

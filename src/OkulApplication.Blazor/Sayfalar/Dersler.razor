@@ -1,0 +1,131 @@
+﻿@page "/dersler"
+@using OkulApplication.Localization
+@using OkulApplication.Permissions
+@using Volo.Abp.Application.Dtos
+@inject IDersAppService DersService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inherits AbpCrudPageBase<IDersAppService, DerslerDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateDerslerDto>
+
+<Card>
+    <CardHeader>
+        <Row Class="justify-content-between">
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <h2>Derslerim</h2>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsAuto">
+                <Button Color="Color.Primary" Clicked="OpenCreateModalAsync">Yeni Ders</Button>
+            </Column>
+        </Row>
+    </CardHeader>
+
+    <CardBody>
+        <DataGrid TItem="DerslerDto"
+                  Data="Entities"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridColumn TItem="DerslerDto" Field="@nameof(DerslerDto.Ad)" Caption="Ders Adı" />
+                <DataGridColumn TItem="DerslerDto" Field="@nameof(DerslerDto.Kodu)" Caption="Ders Kodu" />
+                <DataGridColumn TItem="DerslerDto" Field="@nameof(DerslerDto.Kredi)" Caption="Kredi" />
+
+                <DataGridEntityActionsColumn TItem="DerslerDto" @ref="EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="DerslerDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="DerslerDto" Text="Düzenle" Clicked="() => OpenEditModalAsync(context)" />
+                            <EntityAction TItem="DerslerDto" Text="Sil" Clicked="() => DeleteEntityAsync(context)" />
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+<Modal @ref="CreateModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form OnValidSubmit="CreateEntityAsync">
+            <ModalHeader>
+                <ModalTitle>Yeni Ders</ModalTitle>
+                <CloseButton Clicked="CloseCreateModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="CreateValidationsRef" Model="NewEntity" ValidateOnLoad="false">
+                    <Validation>
+                        <Field>
+                            <FieldLabel>Ders Adı</FieldLabel>
+                            <TextEdit @bind-Text="NewEntity.Ad">
+                                <Feedback><ValidationError /></Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <FieldLabel>Ders Kodu</FieldLabel>
+                        <TextEdit @bind-Text="NewEntity.Kodu">
+                            <Feedback><ValidationError /></Feedback>
+                        </TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Kredi</FieldLabel>
+                        <NumericEdit @bind-Value="NewEntity.Kredi" Min="1">
+                            <Feedback><ValidationError /></Feedback>
+                        </NumericEdit>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="CloseCreateModalAsync">İptal</Button>
+                <Button Color="Color.Primary" Type="@ButtonType.Submit" Clicked="CreateEntityAsync">Kaydet</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="EditModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form OnValidSubmit="UpdateEntityAsync">
+            <ModalHeader>
+                <ModalTitle>@EditingEntity.Ad</ModalTitle>
+                <CloseButton Clicked="CloseEditModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="EditValidationsRef" Model="EditingEntity" ValidateOnLoad="false">
+                    <Field>
+                        <FieldLabel>Ders Adı</FieldLabel>
+                        <TextEdit @bind-Text="EditingEntity.Ad" Required>
+                            <Feedback><ValidationError /></Feedback>
+                        </TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Ders Kodu</FieldLabel>
+                        <TextEdit @bind-Text="EditingEntity.Kodu" Required>
+                            <Feedback><ValidationError /></Feedback>
+                        </TextEdit>
+                    </Field>
+                    <Field>
+                        <FieldLabel>Kredi</FieldLabel>
+                        <NumericEdit @bind-Value="EditingEntity.Kredi" Min="1" Required>
+                            <Feedback><ValidationError /></Feedback>
+                        </NumericEdit>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="CloseEditModalAsync">İptal</Button>
+                <Button Color="Color.Primary" Type="@ButtonType.Submit">Güncelle</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+@code
+{
+    public Dersler()
+    {
+        LocalizationResource = typeof(OkulApplicationResource);
+    }
+}

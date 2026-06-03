@@ -19,9 +19,8 @@
     "CreationTime": "Oluşturulma Zamanı",
     "AreYouSure": "Emin Misiniz?",
     "AreYouSureToDelete": "Silmek İstediğinizden Emin Misiniz?",
-    "Enum:BookType.0": "Bilişim Teknolojileri",
-    "Enum:BookType.1": "Elektrik-Elektronik Teknolojisi",
-    "Enum:BookType.2": "Makine ve Tasarım Teknolojisi",
-    "Enum:BookType.3": "Endüstriyel Otomasyon Teknolojisi"
+    "Menu:Kadromuz": "Kadromuz",
+    "Menu:Teachers": "Öğretmen İşlemleri",
+    "Menu:TeachersApp": "Öğretmenler"
   }
 }
